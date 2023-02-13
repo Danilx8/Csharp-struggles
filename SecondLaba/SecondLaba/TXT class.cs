@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace SecondLaba
 {
-    class Word: Document
+    class TXT: Document
     {
-        string Title;
-        string Fonts;
+        string Date;
+        int Articul;
 
         public override void Info()
         {
             Console.WriteLine("Name = ", Name, ";\n Author = ", Author, ";\n Keywords = ", KeyWords,
-                ";\n Topic = ", Topic, ";\n Path = ", Path, ";\n Title: ", Title, ";\n Fonts: ", Fonts);
+                ";\n Topic = ", Topic, ";\n Path = ", Path, ";\n Date: ", Date, ";\n Articul: ", Articul);
         }
-        Word() {     }
+        TXT() {     }
     }
 }

@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 namespace SecondLaba
 {
-    class Word: Document
+    class PDF: Document
     {
-        string Title;
+        string Certificate;
         string Fonts;
+        int DPI;
 
         public override void Info()
         {
             Console.WriteLine("Name = ", Name, ";\n Author = ", Author, ";\n Keywords = ", KeyWords,
-                ";\n Topic = ", Topic, ";\n Path = ", Path, ";\n Title: ", Title, ";\n Fonts: ", Fonts);
+                ";\n Topic = ", Topic, ";\n Path = ", Path, ";\n Certificate: ", Certificate,
+                ";\n Fonts: ", Fonts, ";\n DPI: ", DPI);
         }
-        Word() {     }
+
+        PDF() {     }
     }
 }

@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace SecondLaba
 {
-    class Word: Document
+    class Excel: Document
     {
-        string Title;
-        string Fonts;
+        int RowCount;
+        int ColumnCount;
 
         public override void Info()
         {
             Console.WriteLine("Name = ", Name, ";\n Author = ", Author, ";\n Keywords = ", KeyWords,
-                ";\n Topic = ", Topic, ";\n Path = ", Path, ";\n Title: ", Title, ";\n Fonts: ", Fonts);
+                ";\n Topic = ", Topic, ";\n Path = ", Path, ";\n Rows amount: ", RowCount, 
+                ";\n Columns amount: ", ColumnCount);
         }
-        Word() {     }
+
+        Excel() {    }
     }
 }
