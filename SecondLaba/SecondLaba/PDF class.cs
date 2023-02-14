@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SecondLaba
 {
@@ -18,7 +14,7 @@ namespace SecondLaba
                 Name, Author, KeyWords, Topic, Path, Certificate, DPI);
         }
 
-        public PDF(string Name, string Author, string KeyWords, string Topic, string Path, string Certificate, 
+        public PDF(string Name, string Author, string KeyWords, string Topic, string Path, string Certificate,
             int DPI)
         {
             this.Name = Name;

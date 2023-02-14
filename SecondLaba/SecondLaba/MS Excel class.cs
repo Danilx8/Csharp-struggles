@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace SecondLaba
 {
-    class Excel: Document
+    class Excel : Document
     {
         int RowCount;
         int ColumnCount;
@@ -20,7 +14,7 @@ namespace SecondLaba
                 Name, Author, KeyWords, Topic, Path, RowCount, ColumnCount);
         }
 
-        public Excel(string Name, string Author, string KeyWords, string Topic, string Path, int RowCount, int ColumnCount) 
+        public Excel(string Name, string Author, string KeyWords, string Topic, string Path, int RowCount, int ColumnCount)
         {
             this.Name = Name;
             this.Author = Author;
