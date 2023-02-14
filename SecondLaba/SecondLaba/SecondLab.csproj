@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Executable file.cs" />
     <Compile Include="HTML class.cs" />
     <Compile Include="TXT class.cs" />
     <Compile Include="MS Word class.cs" />

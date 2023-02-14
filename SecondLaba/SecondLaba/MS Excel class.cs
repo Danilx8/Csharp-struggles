@@ -15,11 +15,20 @@ namespace SecondLaba
 
         public override void Info()
         {
-            Console.WriteLine("Name = ", Name, ";\n Author = ", Author, ";\n Keywords = ", KeyWords,
-                ";\n Topic = ", Topic, ";\n Path = ", Path, ";\n Rows amount: ", RowCount, 
-                ";\n Columns amount: ", ColumnCount);
+            Console.WriteLine("\nИмя файла - {0};\nИмя автора - {1};\nКлючевые слова - {2};\n" +
+                "Тема - {3};\nПуть к файлу- {4};\nЧисло строк - {5};\nЧисло столбцов - {6};",
+                Name, Author, KeyWords, Topic, Path, RowCount, ColumnCount);
         }
 
-        Excel() {    }
+        public Excel(string Name, string Author, string KeyWords, string Topic, string Path, int RowCount, int ColumnCount) 
+        {
+            this.Name = Name;
+            this.Author = Author;
+            this.KeyWords = KeyWords;
+            this.Topic = Topic;
+            this.Path = Path;
+            this.RowCount = RowCount;
+            this.ColumnCount = ColumnCount;
+        }
     }
 }
