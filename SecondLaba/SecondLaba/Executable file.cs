@@ -56,7 +56,7 @@ namespace SecondLaba
             KeyWords = Console.ReadLine();
             Console.Write("Введите тему файла: ");
             Topic = Console.ReadLine();
-            Console.Write("Введите путь к файлу: ");
+            Console.Write("Введите полный путь к файлу: ");
             Path = Console.ReadLine();
             switch (Type)
             {
