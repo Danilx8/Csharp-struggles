@@ -10,8 +10,19 @@ using System;
 
 namespace SecondLaba
 {
-    class Singletone
+    public class Singleton
     {
+        public static Singleton Instance
+        {
+            get
+            {
+                if (instance == null) instance = new Singleton();
+                return instance;
+            }
+        }
+        private Singleton() { }
+        private static Singleton instance;
+
         int Type;
         enum Types
         {
@@ -43,8 +54,6 @@ namespace SecondLaba
 
         string IDs;
         string Classes;
-
-        public Singletone() { }
 
         private void EnterData(int Type)
         {
@@ -117,8 +126,7 @@ namespace SecondLaba
     {
         static void Main()
         {
-            Singletone Loner = new Singletone();
-            Loner.InitializeBeauty();
+            Singleton.Instance.InitializeBeauty();
             Console.ReadKey();
         }
     }
