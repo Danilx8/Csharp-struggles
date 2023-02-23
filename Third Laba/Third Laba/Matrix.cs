@@ -9,7 +9,7 @@ namespace Third_Laba
     internal class Matrix
     {
         private static int MatrixSize;
-        private Matrix [,] UserMatrix = new Matrix [MatrixSize, MatrixSize];
+        private int [,] UserMatrix = new int [MatrixSize, MatrixSize];
         
         public Matrix(int MatrixSize) {
             Random Rand = new Random();
@@ -35,15 +35,13 @@ namespace Third_Laba
             }
         }
 
-        public Matrix this[int RowIndex, int ColumnIndex]
+        public int this[int RowIndex, int ColumnIndex]
         {
             get { return UserMatrix[RowIndex, ColumnIndex]; }
             set { UserMatrix[RowIndex, ColumnIndex] = value; }
         }
 
         public int GetSize() => MatrixSize;
-
-        public Matrix GetValue(int RowIndex, int ColumnIndex) => UserMatrix[RowIndex, ColumnIndex];
     
         public static Matrix operator +(Matrix CurrentMatrix) => CurrentMatrix;
 
@@ -56,6 +54,7 @@ namespace Third_Laba
                     CurrentMatrix[RowIndex, ColumnIndex] *= -1;
                 }
             }
+            return CurrentMatrix;
         }
 
         public static Matrix operator +(Matrix FirstMatrix, Matrix SecondMatrix)
@@ -66,8 +65,7 @@ namespace Third_Laba
             {
                 for (int ColumnIndex = 0; ColumnIndex < NewMatrix.GetSize(); ++ColumnIndex)
                 {
-                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix.GetValue(RowIndex, ColumnIndex) + SecondMatrix.GetValue(RowIndex, ColumnIndex);
-
+                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix[RowIndex, ColumnIndex] + SecondMatrix[RowIndex, ColumnIndex];
                 }
             }
             return NewMatrix;
