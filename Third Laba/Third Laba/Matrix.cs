@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Third_Laba
 {
-    internal class Matrix: Prototype
+    internal class Matrix: Prototype, IComparable
     {
         private readonly int MatrixSize;
         private readonly double[,] UserMatrix;
@@ -143,7 +143,8 @@ namespace Third_Laba
                     if (RowIndex == Perm[ColumnIndex])
                     {
                         b[ColumnIndex] = 1.0;
-                    } else 
+                    } 
+                    else 
                     {
                         b[ColumnIndex] = 0.0;
                     }
@@ -173,12 +174,42 @@ namespace Third_Laba
             return Result;
         }
 
+        public override string ToString()
+        {
+            int Length = this.GetSize();
+            string Result = "";
+            for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
+            {
+                for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                {
+                    Result += this[RowIndex, ColumnIndex] + " ";
+                }
+            }
+            return Result;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj == null) return 1;
+
+            Matrix AnotherMatrix = ((Matrix)obj).Clone() as Matrix;
+            if (AnotherMatrix != null)
+            {
+                return this.Determinant().CompareTo(AnotherMatrix.Determinant());
+            }
+            else
+            {
+                throw new ArgumentException("Один из элементов не матрица!");
+            }
+        }
+
         public override bool Equals(object obj)
         {
             if ((obj == null) || ! this.GetType().Equals(obj.GetType()))
             {
                 return false;
-            } else
+            } 
+            else
             {
                 Matrix AnotherMatrix = ((Matrix) obj).Clone() as Matrix;
                 if (this.GetSize() == AnotherMatrix.GetSize())
@@ -201,6 +232,8 @@ namespace Third_Laba
             }
         }
 
+        public override int GetHashCode() => Convert.ToInt32(this.Determinant());
+   
         public static Matrix operator +(Matrix CurrentMatrix) => CurrentMatrix;
 
         public static Matrix operator -(Matrix CurrentMatrix)
@@ -314,15 +347,9 @@ namespace Third_Laba
     
         public static bool operator >(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() > SecondMatrix.Determinant();
 
-        public static bool operator ==(Matrix FirstMatrix, Matrix SecondMatrix)
-        {
-            return FirstMatrix.Equals(SecondMatrix);
-        }
-
-        public static bool operator !=(Matrix FirstMatrix, Matrix SecondMatrix)
-        {
-            return !(FirstMatrix.Equals(SecondMatrix));
-        }
+        public static bool operator ==(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Equals(SecondMatrix);
+        
+        public static bool operator !=(Matrix FirstMatrix, Matrix SecondMatrix) => !(FirstMatrix.Equals(SecondMatrix));
 
         public static bool operator true(Matrix CurrentMatrix) => CurrentMatrix.GetSize() != 0;
 
