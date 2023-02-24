@@ -70,5 +70,77 @@ namespace Third_Laba
             }
             return NewMatrix;
         }
+
+        public static Matrix operator +(Matrix FirstMatrix, int Number)
+        {
+            Matrix NewMatrix = new Matrix(FirstMatrix.GetSize());
+
+            for (int RowIndex = 0; RowIndex < NewMatrix.GetSize(); ++RowIndex)
+            {
+                for (int ColumnIndex = 0; ColumnIndex < NewMatrix.GetSize(); ++ColumnIndex)
+                {
+                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix[RowIndex, ColumnIndex] + Number;
+                }
+            }
+            return NewMatrix;
+        }
+
+        public static Matrix operator +(int Number, Matrix SecondMatrix)
+        {
+            Matrix NewMatrix = new Matrix(SecondMatrix.GetSize());
+
+            for (int RowIndex = 0; RowIndex < NewMatrix.GetSize(); ++RowIndex)
+            {
+                for (int ColumnIndex = 0; ColumnIndex < NewMatrix.GetSize(); ++ColumnIndex)
+                {
+                    NewMatrix[RowIndex, ColumnIndex] = Number + SecondMatrix[RowIndex, ColumnIndex];
+                }
+            }
+            return NewMatrix;
+        }
+
+        public static Matrix operator *(Matrix FirstMatrix, int Number)
+        {
+            Matrix NewMatrix = new Matrix();
+            for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
+            {
+                for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
+                {
+                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix[RowIndex, ColumnIndex] * Number;
+                }
+            }
+            return NewMatrix;
+        }
+
+        public static Matrix operator *(int Number, Matrix FirstMatrix)
+        {
+            Matrix NewMatrix = new Matrix();
+            for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
+            {
+                for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
+                {
+                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix[RowIndex, ColumnIndex] * Number;
+                }
+            }
+            return NewMatrix;
+        }
+
+        public static Matrix operator *(Matrix FirstMatrix, Matrix SecondMatrix)
+        {
+            Matrix NewMatrix = new Matrix();
+            for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
+            {
+                for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
+                {
+                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix[RowIndex, ColumnIndex] * SecondMatrix[RowIndex, ColumnIndex];
+                }
+            }
+            return NewMatrix;
+        }
+
+        public static bool operator <(Matrix FirstMatrix, Matrix SecondMatrix)
+        {
+
+        }
     }
 }

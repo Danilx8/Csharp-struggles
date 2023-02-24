@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Third_Laba
 {
-    internal class Executable
+    internal abstract class Prototype
     {
-        static void Main(string[] args)
-        {
-            Console.ReadKey();
-        }
+        public abstract Prototype Clone();
     }
 }
