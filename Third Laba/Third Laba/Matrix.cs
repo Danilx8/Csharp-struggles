@@ -1,7 +1,9 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,7 +162,7 @@ namespace Third_Laba
             Matrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
             if (luMatrix == null)
             {
-                throw new Exception("Невозможно посчитать определитель матрицы");
+                throw new Exception("Нельзя посчитать определитель матрицы");
             }
             double Result = Toggle;
             for (int MainElementCoordinates = 0; MainElementCoordinates < luMatrix.GetSize();
@@ -169,6 +171,34 @@ namespace Third_Laba
                 Result *= luMatrix[MainElementCoordinates, MainElementCoordinates];
             }
             return Result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if ((obj == null) || ! this.GetType().Equals(obj.GetType()))
+            {
+                return false;
+            } else
+            {
+                Matrix AnotherMatrix = ((Matrix) obj).Clone() as Matrix;
+                if (this.GetSize() == AnotherMatrix.GetSize())
+                {
+                    int Length = this.GetSize();
+                    for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
+                    {
+                        for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                        {
+                            if (this[RowIndex, ColumnIndex] != AnotherMatrix[RowIndex, ColumnIndex])
+                                return false;
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+                return true;
+            }
         }
 
         public static Matrix operator +(Matrix CurrentMatrix) => CurrentMatrix;
@@ -276,23 +306,26 @@ namespace Third_Laba
             return NewMatrix;
         }
 
-        public static bool operator <=(Matrix FirstMatrix, Matrix SecondMatrix)
-        {            
-            return FirstMatrix.Determinant() <= SecondMatrix.Determinant();
+        public static bool operator <=(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() <= SecondMatrix.Determinant();
+        
+        public static bool operator >=(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() >= SecondMatrix.Determinant();
+        
+        public static bool operator <(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() < SecondMatrix.Determinant();
+    
+        public static bool operator >(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() > SecondMatrix.Determinant();
+
+        public static bool operator ==(Matrix FirstMatrix, Matrix SecondMatrix)
+        {
+            return FirstMatrix.Equals(SecondMatrix);
         }
 
-        public static bool operator >=(Matrix FirstMatrix, Matrix SecondMatrix)
+        public static bool operator !=(Matrix FirstMatrix, Matrix SecondMatrix)
         {
-            return FirstMatrix.Determinant() > SecondMatrix.Determinant();
-        }
-        public static bool operator <(Matrix FirstMatrix, Matrix SecondMatrix)
-        {
-            return FirstMatrix.Determinant() < SecondMatrix.Determinant();
+            return !(FirstMatrix.Equals(SecondMatrix));
         }
 
-        public static bool operator >(Matrix FirstMatrix, Matrix SecondMatrix)
-        {
-            return FirstMatrix.Determinant() > SecondMatrix.Determinant();
-        }
+        public static bool operator true(Matrix CurrentMatrix) => CurrentMatrix.GetSize() != 0;
+
+        public static bool operator false(Matrix CurrentMatrix) => CurrentMatrix.GetSize() == 0;
     }
 }
