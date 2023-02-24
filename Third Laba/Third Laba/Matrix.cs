@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Third_Laba
 {
     internal class Matrix: Prototype
     {
-        private static int MatrixSize;
+        private int MatrixSize;
         private readonly double[,] UserMatrix = new double[MatrixSize, MatrixSize];
         
         public Matrix(int MatrixSize) {
@@ -36,9 +37,10 @@ namespace Third_Laba
 
         public int GetSize() => MatrixSize;
 
-        private static Matrix MatrixDecompose(Matrix CurrentMatrix, out int[] Perm,
+        private Matrix MatrixDecompose(Matrix CurrentMatrix, out int[] Perm,
             out int Toggle)
         {
+            // L - ?; U - ?; Permutation array - ?
             int Length = CurrentMatrix.GetSize();
             Matrix Result = CurrentMatrix.Clone() as Matrix;
             Perm = new int[Length];
@@ -92,9 +94,84 @@ namespace Third_Laba
             return Result;
         }
 
-        public int Determinant(Matrix CurrentMatrix)
+        private double[] HelperSolve(Matrix luMatrix, double[] b)
         {
-            
+            //LU * x = b; x - ?
+            int Length = luMatrix.GetSize();
+            double[] x = new double[Length];
+            b.CopyTo(x, 0);
+            for (int RowIndex = 1; RowIndex < Length; ++RowIndex)
+            {
+                double Summ = x[RowIndex];
+                for (int ColumnIndex = 0; ColumnIndex < RowIndex; ++ColumnIndex)
+                {
+                    Summ -= luMatrix[RowIndex, ColumnIndex] * x[ColumnIndex];
+                }
+                x[RowIndex] = Summ;
+            }
+            x[Length - 1] /= luMatrix[Length - 1, Length - 1];
+            for (int RowIndex = Length - 2; RowIndex >= 0; --RowIndex)
+            {
+                double Summ = x[RowIndex];
+                for (int ColumnIndex = RowIndex + 1; ColumnIndex < Length;
+                    ++ColumnIndex)
+                {
+                    Summ -= luMatrix[RowIndex, ColumnIndex] * x[ColumnIndex];
+                }
+                x[RowIndex] = Summ / luMatrix[RowIndex, ColumnIndex];
+            }
+            return x;
+        }
+
+        public Matrix MatrixInverse(Matrix CurrentMatrix)
+        {
+            int Length = CurrentMatrix.GetSize();
+            Matrix Result = CurrentMatrix.Clone() as Matrix;
+            int[] Perm;
+            int toggle;
+            Matrix luMatrix = MatrixDecompose(CurrentMatrix, out Perm, out Toggle);
+            if (luMatrix == null)
+            {
+                throw new Exception("Нельзя найти обратную матрицу");
+            }
+            double[] b = new double[Length];
+            for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
+            {
+                for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                {
+                    if (RowIndex == Perm[ColumnIndex])
+                    {
+                        b[ColumnIndex] = 1.0;
+                    } else 
+                    {
+                        b[ColumnIndex] = 0.0;
+                    }
+                }
+                double[] x = HelperSolve(luMatrix, b);
+                for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                {
+                    Result[ColumnIndex, RowIndex] = x[ColumnIndex];
+                }
+            }
+            return Result;
+        }
+
+        public double Determinant(Matrix CurrentMatrix)
+        {
+            int[] Perm;
+            int toggle;
+            Matrix luMatrix = MatrixDecompose(CurrentMatrix, out Perm, out Toggle);
+            if (luMatrix == null)
+            {
+                throw new Exception("Невозможно посчитать определитель матрицы");
+            }
+            double Result = toggle;
+            for (int MainElementCoordinates = 0; MainElementCoordinates < luMatrix.GetSize();
+                ++MainElementCoordinates)
+            {
+                Result *= luMatrix[MainElementCoordinates, MainElementCoordinates];
+            }
+            return Result;
         }
 
         public static Matrix operator +(Matrix CurrentMatrix) => CurrentMatrix;
