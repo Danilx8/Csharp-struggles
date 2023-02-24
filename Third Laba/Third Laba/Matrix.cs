@@ -10,8 +10,8 @@ namespace Third_Laba
 {
     internal class Matrix: Prototype
     {
-        private int MatrixSize;
-        private readonly double[,] UserMatrix = new double[MatrixSize, MatrixSize];
+        private readonly int MatrixSize;
+        private readonly double[,] UserMatrix;
         
         public Matrix(int MatrixSize) {
             Random Rand = new Random();
@@ -37,7 +37,7 @@ namespace Third_Laba
 
         public int GetSize() => MatrixSize;
 
-        private Matrix MatrixDecompose(Matrix CurrentMatrix, out int[] Perm,
+        private static Matrix MatrixDecompose(Matrix CurrentMatrix, out int[] Perm,
             out int Toggle)
         {
             // L - ?; U - ?; Permutation array - ?
@@ -51,6 +51,7 @@ namespace Third_Laba
             Toggle = 1;
 
             for (int MainElementCoordinates = 0; MainElementCoordinates < Length - 1; 
+                ++MainElementCoordinates) 
             {
                 double ColumnMax = Math.Abs(
                     Result[MainElementCoordinates, MainElementCoordinates]);
@@ -94,7 +95,7 @@ namespace Third_Laba
             return Result;
         }
 
-        private double[] HelperSolve(Matrix luMatrix, double[] b)
+        private static double[] HelperSolve(Matrix luMatrix, double[] b)
         {
             //LU * x = b; x - ?
             int Length = luMatrix.GetSize();
@@ -118,18 +119,16 @@ namespace Third_Laba
                 {
                     Summ -= luMatrix[RowIndex, ColumnIndex] * x[ColumnIndex];
                 }
-                x[RowIndex] = Summ / luMatrix[RowIndex, ColumnIndex];
+                x[RowIndex] = Summ / luMatrix[RowIndex, RowIndex];
             }
             return x;
         }
 
-        public Matrix MatrixInverse(Matrix CurrentMatrix)
+        public Matrix MatrixInverse()
         {
-            int Length = CurrentMatrix.GetSize();
-            Matrix Result = CurrentMatrix.Clone() as Matrix;
-            int[] Perm;
-            int toggle;
-            Matrix luMatrix = MatrixDecompose(CurrentMatrix, out Perm, out Toggle);
+            int Length = this.GetSize();
+            Matrix Result = this.Clone() as Matrix;
+            Matrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
             if (luMatrix == null)
             {
                 throw new Exception("Нельзя найти обратную матрицу");
@@ -156,16 +155,14 @@ namespace Third_Laba
             return Result;
         }
 
-        public double Determinant(Matrix CurrentMatrix)
+        public double Determinant()
         {
-            int[] Perm;
-            int toggle;
-            Matrix luMatrix = MatrixDecompose(CurrentMatrix, out Perm, out Toggle);
+            Matrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
             if (luMatrix == null)
             {
                 throw new Exception("Невозможно посчитать определитель матрицы");
             }
-            double Result = toggle;
+            double Result = Toggle;
             for (int MainElementCoordinates = 0; MainElementCoordinates < luMatrix.GetSize();
                 ++MainElementCoordinates)
             {
@@ -279,16 +276,23 @@ namespace Third_Laba
             return NewMatrix;
         }
 
+        public static bool operator <=(Matrix FirstMatrix, Matrix SecondMatrix)
+        {            
+            return FirstMatrix.Determinant() <= SecondMatrix.Determinant();
+        }
+
+        public static bool operator >=(Matrix FirstMatrix, Matrix SecondMatrix)
+        {
+            return FirstMatrix.Determinant() > SecondMatrix.Determinant();
+        }
         public static bool operator <(Matrix FirstMatrix, Matrix SecondMatrix)
         {
-            bool Difference;
-            return Difference;
+            return FirstMatrix.Determinant() < SecondMatrix.Determinant();
         }
 
         public static bool operator >(Matrix FirstMatrix, Matrix SecondMatrix)
         {
-            bool Difference;
-            return Difference;
+            return FirstMatrix.Determinant() > SecondMatrix.Determinant();
         }
     }
 }
