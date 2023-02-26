@@ -12,11 +12,12 @@ namespace Third_Laba
 {
     internal class Matrix: Prototype, IComparable
     {
-        private readonly int MatrixSize;
-        private readonly double[,] UserMatrix;
+        private int MatrixSize;
+        private double[,] UserMatrix;
         
         public Matrix(int MatrixSize) {
             Random Rand = new Random();
+            UserMatrix = new double[MatrixSize, MatrixSize];
             for (int RowIndex = 0; RowIndex < MatrixSize; ++RowIndex)
             {
                 for (int ColumnIndex = 0; ColumnIndex < MatrixSize; ++ColumnIndex)
