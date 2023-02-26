@@ -236,18 +236,6 @@ namespace Third_Laba
    
         public static Matrix operator +(Matrix CurrentMatrix) => CurrentMatrix;
 
-        public static Matrix operator -(Matrix CurrentMatrix)
-        {
-            for (int RowIndex = 0; RowIndex < CurrentMatrix.GetSize(); ++RowIndex)
-            {
-                for (int ColumnIndex = 0; ColumnIndex < CurrentMatrix.GetSize(); ++ColumnIndex)
-                {
-                    CurrentMatrix[RowIndex, ColumnIndex] *= -1;
-                }
-            }
-            return CurrentMatrix;
-        }
-
         public static Matrix operator +(Matrix FirstMatrix, Matrix SecondMatrix)
         {
             Matrix NewMatrix = SecondMatrix.Clone() as Matrix;
