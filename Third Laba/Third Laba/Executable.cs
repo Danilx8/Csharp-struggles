@@ -12,10 +12,10 @@ namespace Third_Laba
 {
     internal class Executable
     {
-        private static Matrix FirstMatrix;
-        private static Matrix SecondMatrix;
-        private static Matrix ResultMatrix;
-        
+        static SquareMatrix FirstMatrix;
+        static SquareMatrix SecondMatrix;
+        static SquareMatrix ResultMatrix;
+
         static void Main(string[] args)
         {
             int UserInput = 0;
@@ -30,12 +30,13 @@ namespace Third_Laba
                         case 1:
                             Console.Clear();
                             Console.Write("Введите размерность своих матриц: ");
-                            while (MatricesSize == 0)
+                            while (MatricesSize <= 0)
                             {
                                 MatricesSize = InputHandler();
                             }
                             GenerateFirstMatrix(MatricesSize);
                             GenerateSecondMatrix(MatricesSize);
+                            Console.Clear();
                             break;
                         case 2:
                             Console.Clear();
@@ -43,7 +44,7 @@ namespace Third_Laba
                             break;
                         case 3:
                             DemonstrateMatrices();
-                            Console.ReadKey();
+                            Console.Clear();
                             break;
                     }
                 }
@@ -69,13 +70,13 @@ namespace Third_Laba
 
         static public void GenerateFirstMatrix(int MatrixSize)
         {
-            FirstMatrix = new Matrix(MatrixSize);
+            FirstMatrix = new SquareMatrix(MatrixSize);
         }
 
 
         static public void GenerateSecondMatrix(int MatrixSize)
         {
-            SecondMatrix = new Matrix(MatrixSize);
+            SecondMatrix = new SquareMatrix(MatrixSize);
         }
 
         static private int InputHandler()
@@ -104,140 +105,183 @@ namespace Third_Laba
             {
                 case 1:
                     Console.Clear();
-                    DemonstrateMatrices();
-                    Console.WriteLine("\n\nA   B\n\n Выберите операцию: '+', '*', '?'");
-                    Operation = Console.ReadLine();
-                    Console.Clear();
-                    if (Operation == "+")
+                    if (DemonstrateMatrices())
                     {
-                        Console.WriteLine("A + B");
-                        ResultMatrix = (FirstMatrix + SecondMatrix).Clone() as Matrix;
-                        DemonstrateResult();
-                    }
-                    else if (Operation == "*")
-                    {
-                        Console.WriteLine("A * B");
-                        ResultMatrix = (FirstMatrix * SecondMatrix).Clone() as Matrix;
-                        DemonstrateResult();
-                    }
-                    else if (Operation == "?")
-                    {
-                        if (FirstMatrix > SecondMatrix)
+                        Console.WriteLine("\n\nA   B\n\nВыберите операцию: '+', '*', '?'");
+                        Operation = Console.ReadLine();
+                        Console.Clear();
+                        if (Operation == "+")
                         {
-                            Console.WriteLine("A > B");
+                            Console.WriteLine("A + B");
+                            ResultMatrix = (FirstMatrix + SecondMatrix).Clone() as SquareMatrix;
+                            DemonstrateResult();
                         }
-                        else if (FirstMatrix < SecondMatrix)
+                        else if (Operation == "*")
                         {
-                            Console.WriteLine("A < B");
+                            Console.WriteLine("A * B");
+                            ResultMatrix = (FirstMatrix * SecondMatrix).Clone() as SquareMatrix;
+                            DemonstrateResult();
+                        }
+                        else if (Operation == "?")
+                        {
+                            if (FirstMatrix > SecondMatrix)
+                            {
+                                Console.WriteLine("A > B");
+                            }
+                            else if (FirstMatrix < SecondMatrix)
+                            {
+                                Console.WriteLine("A < B");
+                            }
+                            else
+                            {
+                                Console.WriteLine("A = B");
+                            }
+                            Console.ReadKey();
                         }
                         else
                         {
-                            Console.WriteLine("A = B");
+                            Console.WriteLine("Неправильная операция");
                         }
-                    }
-                    else
-                    {
-                        Console.WriteLine("Неправильная операция");
                     }
                     break;
                 case 2:
                     Console.Clear();
-                    for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
+                    try
                     {
-                        for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
+                        for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
                         {
-                            Console.WriteLine(FirstMatrix[RowIndex, ColumnIndex]);
+                            for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
+                            {
+                                Console.Write(FirstMatrix[RowIndex, ColumnIndex] + " ");
+                            }
+                            Console.Write("\n");
                         }
-                        Console.WriteLine("\n");
+                        Console.WriteLine("\n\nВыберите операцию: '+', '*'");
+                        Operation = Console.ReadLine();
+                        Console.Clear();
+                        if (Operation == "+")
+                        {
+                            Console.Write("Введите слагаемое: ");
+                            Component = InputHandler();
+                            ResultMatrix = (FirstMatrix + Component).Clone() as SquareMatrix;
+                            DemonstrateResult();
+                        }
+                        else if (Operation == "*")
+                        {
+                            Console.Write("Введите множитель: ");
+                            Component = InputHandler();
+                            ResultMatrix = (FirstMatrix * Component).Clone() as SquareMatrix;
+                            DemonstrateResult();
+                        }
+                        else
+                        {
+                            Console.Write("Неправильная операция");
+                        }
                     }
-                    Console.WriteLine("\n\nВыберите операцию: '+', '*'");
-                    Operation = Console.ReadLine();
-                    Console.Clear();
-                    if (Operation == "+")
+                    catch (NullReferenceException)
                     {
-                        Console.WriteLine("Введите слагаемое: ");
-                        Component = InputHandler();
-                        Matrix ResultMatrix = (FirstMatrix + Component).Clone() as Matrix;
-                    }
-                    else if (Operation == "*")
-                    {
-                        Console.WriteLine("Введите множитель: ");
-                        Component = InputHandler();
-                        ResultMatrix = (FirstMatrix + Component).Clone() as Matrix;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Неправильная операция");
+                        Console.WriteLine("Нет готовых матриц");
+                        Console.ReadKey();
                     }
                     break;
                 case 3:
                     Console.Clear();
-                    for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
+                    try
                     {
-                        for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
+                        for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
                         {
-                            Console.WriteLine(FirstMatrix[RowIndex, ColumnIndex]);
+                            for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
+                            {
+                                Console.Write(FirstMatrix[RowIndex, ColumnIndex] + " ");
+                            }
+                            Console.Write("\n");
                         }
-                        Console.WriteLine("\n");
+                        Console.WriteLine("\n\nВыберите операцию: '+', '*'");
+                        Operation = Console.ReadLine();
+                        Console.Clear();
+                        if (Operation == "+")
+                        {
+                            Console.WriteLine("Введите слагаемое: ");
+                            Component = InputHandler();
+                            ResultMatrix = (SecondMatrix + Component).Clone() as SquareMatrix;
+                            DemonstrateResult();
+                        }
+                        else if (Operation == "*")
+                        {
+                            Console.WriteLine("Введите множитель: ");
+                            Component = InputHandler();
+                            ResultMatrix = (SecondMatrix * Component).Clone() as SquareMatrix;
+                            DemonstrateResult();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Неправильная операция");
+                        }
                     }
-                    Console.WriteLine("\n\nВыберите операцию: '+', '*'");
-                    Operation = Console.ReadLine();
-                    Console.Clear();
-                    if (Operation == "+")
+                    catch (NullReferenceException)
                     {
-                        Console.WriteLine("Введите слагаемое: ");
-                        Component = InputHandler();
-                        Matrix ResultMatrix = (SecondMatrix + Component).Clone() as Matrix;
-                    }
-                    else if (Operation == "*")
-                    {
-                        Console.WriteLine("Введите множитель: ");
-                        Component = InputHandler();
-                        ResultMatrix = (SecondMatrix + Component).Clone() as Matrix;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Неправильная операция");
+                        Console.WriteLine("Нет готовых матриц");
+                        Console.ReadKey();
                     }
                     break;
             }
         }
 
-        static public void DemonstrateMatrices()
+        static public bool DemonstrateMatrices()
         {
-            int Length = FirstMatrix.GetSize();
-            Console.WriteLine("Матрица А: ");
-            for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
+            try
             {
-                for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                int Length = FirstMatrix.GetSize();
+                Console.WriteLine("Матрица А: ");
+                for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
                 {
-                    Console.WriteLine(FirstMatrix[RowIndex, ColumnIndex] + " ");
+                    for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                    {
+                        Console.Write(FirstMatrix[RowIndex, ColumnIndex] + " ");
+                    }
+                    Console.Write("\n");
                 }
-                Console.WriteLine("\n");
-            }
 
-            Console.WriteLine("\n\nМатрица B: ");
-            for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
-            {
-                for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                Console.WriteLine("\n\nМатрица B: ");
+                for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
                 {
-                    Console.WriteLine(SecondMatrix[RowIndex, ColumnIndex] + " ");
+                    for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                    {
+                        Console.Write(SecondMatrix[RowIndex, ColumnIndex] + " ");
+                    }
+                    Console.Write("\n");
                 }
-                Console.WriteLine("\n");
             }
+            catch (NullReferenceException)
+            {
+                Console.WriteLine("Нет готовых матриц");
+                Console.ReadKey();
+                return false;
+            }
+            Console.ReadKey();
+            return true;
         }
 
         static public void DemonstrateResult()
         {
-            int Length = ResultMatrix.GetSize();
-            for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
+            try
             {
-                for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                int Length = ResultMatrix.GetSize();
+                for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
                 {
-                    Console.WriteLine(ResultMatrix[RowIndex, ColumnIndex] + " ");
+                    for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
+                    {
+                        Console.Write(ResultMatrix[RowIndex, ColumnIndex] + " ");
+                    }
+                    Console.Write("\n");
                 }
-                Console.WriteLine("\n");
             }
+            catch (NullReferenceException)
+            {
+                Console.WriteLine("Нет матрицы результата");
+            }
+            Console.ReadKey();
+            Console.Clear();
         }
     }
 }

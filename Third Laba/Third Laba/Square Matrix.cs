@@ -1,35 +1,49 @@
 ﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Runtime.Remoting;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Third_Laba
 {
-    internal class Matrix: Prototype, IComparable
+    internal class SquareMatrix: ICloneable, IComparable
     {
         private int MatrixSize;
         private double[,] UserMatrix;
         
-        public Matrix(int MatrixSize) {
-            Random Rand = new Random();
-            UserMatrix = new double[MatrixSize, MatrixSize];
+        public SquareMatrix(int InputMatrixSize) {
+            try
+            {
+                if (InputMatrixSize <= 0)
+                {
+                    throw new InvalidMatrixException("Размер не может быть меньше единицы!");
+                }
+                MatrixSize = InputMatrixSize;
+                Random Rand = new Random(Guid.NewGuid().GetHashCode());
+                UserMatrix = new double[MatrixSize, MatrixSize];
+                for (int RowIndex = 0; RowIndex < MatrixSize; ++RowIndex)
+                {
+                    for (int ColumnIndex = 0; ColumnIndex < MatrixSize; ++ColumnIndex)
+                    {
+                        UserMatrix[RowIndex, ColumnIndex] = Convert.ToDouble(Rand.Next(-100, 100));
+                    }
+                }
+            }
+            catch (InvalidMatrixException err)
+            {
+                Console.WriteLine(err.Message);
+                Console.ReadKey();
+            }
+        }
+
+        public object Clone()
+        {
+            SquareMatrix Result = new SquareMatrix(this.MatrixSize);
+            Result.MatrixSize = this.MatrixSize;
             for (int RowIndex = 0; RowIndex < MatrixSize; ++RowIndex)
             {
                 for (int ColumnIndex = 0; ColumnIndex < MatrixSize; ++ColumnIndex)
                 {
-                    UserMatrix[RowIndex, ColumnIndex] = Rand.Next(0, 100);
+                    Result[RowIndex, ColumnIndex] = this[RowIndex, ColumnIndex];
                 }
             }
-        }
-
-        public override Prototype Clone()
-        {
-            return new Matrix(MatrixSize);
+            return Result;
         }
 
         public double this[int RowIndex, int ColumnIndex]
@@ -40,16 +54,16 @@ namespace Third_Laba
 
         public int GetSize() => MatrixSize;
 
-        private static Matrix MatrixDecompose(Matrix CurrentMatrix, out int[] Perm,
+        private static SquareMatrix MatrixDecompose(SquareMatrix CurrentMatrix, out int[] PermutationArray,
             out int Toggle)
         {
             // L - ?; U - ?; Permutation array - ?
             int Length = CurrentMatrix.GetSize();
-            Matrix Result = CurrentMatrix.Clone() as Matrix;
-            Perm = new int[Length];
+            SquareMatrix Result = CurrentMatrix.Clone() as SquareMatrix;
+            PermutationArray = new int[Length];
             for (int Element = 0; Element < Length; ++Element)
             {
-                Perm[Element] = Element;
+                PermutationArray[Element] = Element;
             }
             Toggle = 1;
 
@@ -76,8 +90,8 @@ namespace Third_Laba
                         (Result[PermRow, ColumnIndex], Result[MainElementCoordinates, ColumnIndex]) =
                             (Result[MainElementCoordinates, ColumnIndex], Result[PermRow, ColumnIndex]); //кортеж
                     }
-                    (Perm[MainElementCoordinates], Perm[PermRow]) = 
-                        (Perm[PermRow], Perm[MainElementCoordinates]); //тож кортеж
+                    (PermutationArray[MainElementCoordinates], PermutationArray[PermRow]) = 
+                        (PermutationArray[PermRow], PermutationArray[MainElementCoordinates]); //тож кортеж
                     Toggle = -Toggle;
                 }
 
@@ -98,40 +112,40 @@ namespace Third_Laba
             return Result;
         }
 
-        private static double[] HelperSolve(Matrix luMatrix, double[] b)
+        private static double[] ProblemSolver(SquareMatrix luMatrix, double[] ResultVector)
         {
             //LU * x = b; x - ?
             int Length = luMatrix.GetSize();
-            double[] x = new double[Length];
-            b.CopyTo(x, 0);
+            double[] SolutionVector = new double[Length];
+            ResultVector.CopyTo(SolutionVector, 0);
             for (int RowIndex = 1; RowIndex < Length; ++RowIndex)
             {
-                double Summ = x[RowIndex];
+                double Summ = SolutionVector[RowIndex];
                 for (int ColumnIndex = 0; ColumnIndex < RowIndex; ++ColumnIndex)
                 {
-                    Summ -= luMatrix[RowIndex, ColumnIndex] * x[ColumnIndex];
+                    Summ -= luMatrix[RowIndex, ColumnIndex] * SolutionVector[ColumnIndex];
                 }
-                x[RowIndex] = Summ;
+                SolutionVector[RowIndex] = Summ;
             }
-            x[Length - 1] /= luMatrix[Length - 1, Length - 1];
+            SolutionVector[Length - 1] /= luMatrix[Length - 1, Length - 1];
             for (int RowIndex = Length - 2; RowIndex >= 0; --RowIndex)
             {
-                double Summ = x[RowIndex];
+                double Summ = SolutionVector[RowIndex];
                 for (int ColumnIndex = RowIndex + 1; ColumnIndex < Length;
                     ++ColumnIndex)
                 {
-                    Summ -= luMatrix[RowIndex, ColumnIndex] * x[ColumnIndex];
+                    Summ -= luMatrix[RowIndex, ColumnIndex] * SolutionVector[ColumnIndex];
                 }
-                x[RowIndex] = Summ / luMatrix[RowIndex, RowIndex];
+                SolutionVector[RowIndex] = Summ / luMatrix[RowIndex, RowIndex];
             }
-            return x;
+            return SolutionVector;
         }
 
-        public Matrix MatrixInverse()
+        public SquareMatrix MatrixInverse()
         {
             int Length = this.GetSize();
-            Matrix Result = this.Clone() as Matrix;
-            Matrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
+            SquareMatrix Result = this.Clone() as SquareMatrix;
+            SquareMatrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
             if (luMatrix == null)
             {
                 throw new Exception("Нельзя найти обратную матрицу");
@@ -150,7 +164,7 @@ namespace Third_Laba
                         b[ColumnIndex] = 0.0;
                     }
                 }
-                double[] x = HelperSolve(luMatrix, b);
+                double[] x = ProblemSolver(luMatrix, b);
                 for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
                 {
                     Result[ColumnIndex, RowIndex] = x[ColumnIndex];
@@ -161,7 +175,7 @@ namespace Third_Laba
 
         public double Determinant()
         {
-            Matrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
+            SquareMatrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
             if (luMatrix == null)
             {
                 throw new Exception("Нельзя посчитать определитель матрицы");
@@ -193,7 +207,7 @@ namespace Third_Laba
         {
             if (obj == null) return 1;
 
-            Matrix AnotherMatrix = ((Matrix)obj).Clone() as Matrix;
+            SquareMatrix AnotherMatrix = ((SquareMatrix)obj).Clone() as SquareMatrix;
             if (AnotherMatrix != null)
             {
                 return this.Determinant().CompareTo(AnotherMatrix.Determinant());
@@ -212,7 +226,7 @@ namespace Third_Laba
             } 
             else
             {
-                Matrix AnotherMatrix = ((Matrix) obj).Clone() as Matrix;
+                SquareMatrix AnotherMatrix = ((SquareMatrix) obj).Clone() as SquareMatrix;
                 if (this.GetSize() == AnotherMatrix.GetSize())
                 {
                     int Length = this.GetSize();
@@ -235,11 +249,11 @@ namespace Third_Laba
 
         public override int GetHashCode() => Convert.ToInt32(this.Determinant());
    
-        public static Matrix operator +(Matrix CurrentMatrix) => CurrentMatrix;
+        public static SquareMatrix operator +(SquareMatrix CurrentMatrix) => CurrentMatrix;
 
-        public static Matrix operator +(Matrix FirstMatrix, Matrix SecondMatrix)
+        public static SquareMatrix operator +(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix)
         {
-            Matrix NewMatrix = SecondMatrix.Clone() as Matrix;
+            SquareMatrix NewMatrix = SecondMatrix.Clone() as SquareMatrix;
             
             for (int RowIndex = 0; RowIndex < NewMatrix.GetSize(); ++RowIndex)
             {
@@ -252,9 +266,9 @@ namespace Third_Laba
             return NewMatrix;
         }
 
-        public static Matrix operator +(Matrix FirstMatrix, int Number)
+        public static SquareMatrix operator +(SquareMatrix FirstMatrix, int Number)
         {
-            Matrix NewMatrix = FirstMatrix.Clone() as Matrix;
+            SquareMatrix NewMatrix = FirstMatrix.Clone() as SquareMatrix;
  
             for (int RowIndex = 0; RowIndex < NewMatrix.GetSize(); ++RowIndex)
             {
@@ -266,9 +280,9 @@ namespace Third_Laba
             return NewMatrix;
         }
 
-        public static Matrix operator +(int Number, Matrix SecondMatrix)
+        public static SquareMatrix operator +(int Number, SquareMatrix SecondMatrix)
         {
-            Matrix NewMatrix = SecondMatrix.Clone() as Matrix;
+            SquareMatrix NewMatrix = SecondMatrix.Clone() as SquareMatrix;
 
             for (int RowIndex = 0; RowIndex < NewMatrix.GetSize(); ++RowIndex)
             {
@@ -280,9 +294,9 @@ namespace Third_Laba
             return NewMatrix;
         }
 
-        public static Matrix operator *(Matrix FirstMatrix, int Number)
+        public static SquareMatrix operator *(SquareMatrix FirstMatrix, int Number)
         {
-            Matrix NewMatrix = FirstMatrix.Clone() as Matrix;
+            SquareMatrix NewMatrix = FirstMatrix.Clone() as SquareMatrix;
             for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
             {
                 for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
@@ -293,9 +307,9 @@ namespace Third_Laba
             return NewMatrix;
         }
 
-        public static Matrix operator *(int Number, Matrix FirstMatrix)
+        public static SquareMatrix operator *(int Number, SquareMatrix FirstMatrix)
         {
-            Matrix NewMatrix = FirstMatrix.Clone() as Matrix;
+            SquareMatrix NewMatrix = FirstMatrix.Clone() as SquareMatrix;
             for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
             {
                 for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize(); ++ColumnIndex)
@@ -306,9 +320,9 @@ namespace Third_Laba
             return NewMatrix;
         }
 
-        public static Matrix operator *(Matrix FirstMatrix, Matrix SecondMatrix)
+        public static SquareMatrix operator *(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix)
         {
-            Matrix NewMatrix = FirstMatrix.Clone() as Matrix;
+            SquareMatrix NewMatrix = FirstMatrix.Clone() as SquareMatrix;
             double CurrentElement = 0.0;
             for (int RowIndex = 0; RowIndex < FirstMatrix.GetSize(); ++RowIndex)
             {
@@ -328,20 +342,20 @@ namespace Third_Laba
             return NewMatrix;
         }
 
-        public static bool operator <=(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() <= SecondMatrix.Determinant();
+        public static bool operator <=(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() <= SecondMatrix.Determinant();
         
-        public static bool operator >=(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() >= SecondMatrix.Determinant();
+        public static bool operator >=(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() >= SecondMatrix.Determinant();
         
-        public static bool operator <(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() < SecondMatrix.Determinant();
+        public static bool operator <(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() < SecondMatrix.Determinant();
     
-        public static bool operator >(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Determinant() > SecondMatrix.Determinant();
+        public static bool operator >(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() > SecondMatrix.Determinant();
 
-        public static bool operator ==(Matrix FirstMatrix, Matrix SecondMatrix) => FirstMatrix.Equals(SecondMatrix);
+        public static bool operator ==(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Equals(SecondMatrix);
         
-        public static bool operator !=(Matrix FirstMatrix, Matrix SecondMatrix) => !(FirstMatrix.Equals(SecondMatrix));
+        public static bool operator !=(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => !(FirstMatrix.Equals(SecondMatrix));
 
-        public static bool operator true(Matrix CurrentMatrix) => CurrentMatrix.GetSize() != 0;
+        public static bool operator true(SquareMatrix CurrentMatrix) => CurrentMatrix.GetSize() != 0;
 
-        public static bool operator false(Matrix CurrentMatrix) => CurrentMatrix.GetSize() == 0;
+        public static bool operator false(SquareMatrix CurrentMatrix) => CurrentMatrix.GetSize() == 0;
     }
 }
