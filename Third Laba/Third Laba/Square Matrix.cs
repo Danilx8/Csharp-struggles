@@ -247,7 +247,17 @@ namespace Third_Laba
             }
         }
 
-        public override int GetHashCode() => Convert.ToInt32(this.Determinant());
+        public static explicit operator double(SquareMatrix Matrix)
+        {
+            return Matrix.Determinant();
+        }
+
+        public static implicit operator SquareMatrix(int InputMatrixSize)
+        {
+            return new SquareMatrix(InputMatrixSize);
+        }
+
+        public override int GetHashCode() => Convert.ToInt32(this.ToString());
    
         public static SquareMatrix operator +(SquareMatrix CurrentMatrix) => CurrentMatrix;
 
