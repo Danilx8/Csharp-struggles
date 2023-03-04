@@ -9,26 +9,28 @@ namespace Fourth_Laba
 {
     internal class Searcher
     {
-        private int count = 0;
-        private List<TextInfoClass> files = new List<TextInfoClass>();
-
-        public void AddFileToBase(FileStream file, string Keywords, string FileName)
+        public static List<string> KeywordsFilesSearcher(string Path, string Keywords)
         {
-            TextInfoClass Newbie = new TextInfoClass(Keywords, FileName);
-            ++count;
-            files.Add(Newbie);
-        }
-
-        public TextInfoClass KeyWordsSearch(string KeyWords)
-        {
-            for (int ElementIndex = 0; ElementIndex < count; ++ElementIndex)
+            List<string> ReadyList = new List<string>();
+            try
             {
-                if (files[ElementIndex].Keywords == KeyWords)
+                var txtFiles = Directory.EnumerateFiles(Path, "*.txt", SearchOption.AllDirectories);
+
+                foreach (string currentFile in txtFiles)
                 {
-                    return files[ElementIndex];
+                    string fileName = currentFile.Substring(Path.Length + 1);
+                    if(File.ReadLines(Path + fileName).Any(line => line.Contains(Keywords)))
+                    {
+                        ReadyList.Add(fileName);
+                    }
                 }
             }
-            return null;
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return ReadyList;
         }
     }
 }
