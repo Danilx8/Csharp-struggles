@@ -10,13 +10,8 @@ namespace Fourth_Laba
 {
     internal static class Editor
     {
-        public static void InitiateEdit()
+        public static void InitiateEdit(string UserPath)
         {
-            Console.Write("Введите имя редактируемого файла: ");
-            textFile.FileName = Console.ReadLine();
-            string UserPath = Path.GetFullPath(textFile.FileName);
-
-            Console.Clear();
             Console.Write("Что будете делать с указанным файлом?\n\n1. Изменить текст\n2. Откатить изменения\n\nВведите число: ");
             int Choice = 0;
             while (Choice < 1 || Choice > 2)
@@ -32,6 +27,7 @@ namespace Fourth_Laba
                 case 1:
                     FileStream file = new FileStream(UserPath, FileMode.OpenOrCreate);
                     FileReader(file, textFile.FileName);
+                    Console.Clear();
                     Console.WriteLine("Введите новое содержание файла(нажмите ~ для выхода):");
                     char ch;
                     int element;
@@ -50,8 +46,10 @@ namespace Fourth_Laba
                             ch = Char.MinValue;
                         }
                     } while (ch != '~');
-
                     FileWriter(Input, file);
+                    Console.Clear();
+                    Console.WriteLine("Изменения добавлены успешно");
+                    Console.ReadKey();
                     break;
                 case 2:
                     try
@@ -61,6 +59,7 @@ namespace Fourth_Laba
                     catch (NullReferenceException)
                     {
                         Console.WriteLine("Не было изменений");
+                        Console.ReadKey();
                     }
                     break;
             }
