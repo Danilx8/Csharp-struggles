@@ -9,7 +9,7 @@ namespace Fourth_Laba
 {
     class Memento
     {
-        public string Keywords { get; set; }
+        public string Content { get; set; }
         public string FileName { get; set; }
     }
 
@@ -28,14 +28,15 @@ namespace Fourth_Laba
     }
 
     [Serializable]
-    class TextInfoClass: IOriginator
+    class TextClass: IOriginator
     {
-        public string Keywords { get; set; }
+        public string Content { get; set; }
         public string FileName { get; set; }
 
-        public TextInfoClass(string Keywords, string FileName)
+        public TextClass() { }
+        public TextClass(string Content, string FileName)
         {
-            this.Keywords = Keywords;
+            this.Content = Content;
             this.FileName = FileName;
         }
 
@@ -50,15 +51,15 @@ namespace Fourth_Laba
         public void BinaryDeserialization(FileStream fs) 
         {
             BinaryFormatter bf = new BinaryFormatter();
-            TextInfoClass deserialized = (TextInfoClass)bf.Deserialize(fs);
-            Keywords = deserialized.Keywords;
+            TextClass deserialized = (TextClass)bf.Deserialize(fs);
+            Content = deserialized.Content;
             FileName = deserialized.FileName;
             fs.Close();
         }
 
         public void XmlSerialization(FileStream fs) 
         {
-            XmlSerializer xmlserializer = new XmlSerializer(typeof(TextInfoClass));
+            XmlSerializer xmlserializer = new XmlSerializer(typeof(TextClass));
             xmlserializer.Serialize(fs, this);
             fs.Flush();
             fs.Close();
@@ -66,16 +67,16 @@ namespace Fourth_Laba
 
         public void XmlDeserialization(FileStream fs) 
         {
-            XmlSerializer xmlserializer = new XmlSerializer(typeof(TextInfoClass));
-            TextInfoClass deserialized = (TextInfoClass)xmlserializer.Deserialize(fs);
-            Keywords = deserialized.Keywords;
+            XmlSerializer xmlserializer = new XmlSerializer(typeof(TextClass));
+            TextClass deserialized = (TextClass)xmlserializer.Deserialize(fs);
+            Content = deserialized.Content;
             FileName = deserialized.FileName;
             fs.Close();
         }
 
         object IOriginator.GetMemento()
         {
-            return new Memento { Keywords = this.Keywords, FileName = this.FileName };
+            return new Memento { Content = this.Content, FileName = this.FileName };
         }
 
         void IOriginator.SetMemento(object memento)
@@ -83,7 +84,7 @@ namespace Fourth_Laba
             if (memento is Memento)
             {
                 var mem = memento as Memento;
-                Keywords = mem.Keywords;
+                Content = mem.Content;
                 FileName = mem.FileName;
             }
         }

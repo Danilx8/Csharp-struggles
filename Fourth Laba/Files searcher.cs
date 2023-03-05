@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace Fourth_Laba
 {
     internal class Searcher
     {
-        public static List<string> KeywordsFilesSearcher(string Path, string Keywords)
+        public static void KeywordsFilesSearcher(string Path, string Keywords)
         {
             List<string> ReadyList = new List<string>();
             try
@@ -18,7 +19,7 @@ namespace Fourth_Laba
 
                 foreach (string currentFile in txtFiles)
                 {
-                    string fileName = currentFile.Substring(Path.Length + 1);
+                    string fileName = currentFile.Substring(Path.Length);
                     if(File.ReadLines(Path + fileName).Any(line => line.Contains(Keywords)))
                     {
                         ReadyList.Add(fileName);
@@ -30,7 +31,10 @@ namespace Fourth_Laba
                 Console.WriteLine(e.Message);
             }
 
-            return ReadyList;
+            for (int ElementIndex = 0; ElementIndex < ReadyList.Count; ++ElementIndex)
+            {
+                Console.Write($"{ElementIndex}. {ReadyList[ElementIndex]}\n");
+            }
         }
     }
 }
