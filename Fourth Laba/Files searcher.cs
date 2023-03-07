@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Fourth_Laba
 {
@@ -20,7 +17,7 @@ namespace Fourth_Laba
                 foreach (string currentFile in txtFiles)
                 {
                     string fileName = currentFile.Substring(Path.Length);
-                    if(File.ReadLines(Path + fileName).Any(line => line.Contains(Keywords)))
+                    if(File.ReadLines(Path + fileName).Any(line => line.Contains(Keywords)) || fileName.Contains(Keywords))
                     {
                         ReadyList.Add(fileName);
                     }
@@ -31,9 +28,16 @@ namespace Fourth_Laba
                 Console.WriteLine(e.Message);
             }
 
-            for (int ElementIndex = 0; ElementIndex < ReadyList.Count; ++ElementIndex)
+            if (ReadyList.Count != 0)
             {
-                Console.Write($"{ElementIndex}. {ReadyList[ElementIndex]}\n");
+                for (int ElementIndex = 0; ElementIndex < ReadyList.Count; ++ElementIndex)
+                {
+                    Console.Write($"{ElementIndex + 1}. {ReadyList[ElementIndex]}\n");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Нет подходящих файлов");
             }
         }
     }

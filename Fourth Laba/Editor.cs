@@ -10,11 +10,12 @@ namespace Fourth_Laba
 {
     internal static class Editor
     {
-        public static void InitiateEdit(string UserPath)
+        public static void InitiateEdit(string UserPath, string FileName)
         {
-            Console.Write("Что будете делать с указанным файлом?\n\n1. Изменить текст\n2. Откатить изменения\n\nВведите число: ");
+            Console.Write("Что будете делать с указанным файлом?\n\n1. Изменить текст\n" +
+                "2. Запомнить изменения\n3. Откатить изменения\n\nВведите номер опции: ");
             int Choice = 0;
-            while (Choice < 1 || Choice > 2)
+            while (Choice < 1 || Choice > 3)
             {
                 if (int.TryParse(Convert.ToString(Console.ReadLine()), out Choice) == false)
                 {
@@ -22,11 +23,11 @@ namespace Fourth_Laba
                 }
             }
 
+            FileStream file = new FileStream(UserPath, FileMode.OpenOrCreate);
+            FileReader(file, FileName);
             switch (Choice)
             {
                 case 1:
-                    FileStream file = new FileStream(UserPath, FileMode.OpenOrCreate);
-                    FileReader(file, textFile.FileName);
                     Console.Clear();
                     Console.WriteLine("Введите новое содержание файла(нажмите ~ для выхода):");
                     char ch;
@@ -52,9 +53,16 @@ namespace Fourth_Laba
                     Console.ReadKey();
                     break;
                 case 2:
+                    ct.SaveState(textFile);
+                    break;
+                case 3:
                     try
                     {
-                        RestoreData();
+                        file.Close();
+                        File.WriteAllText(UserPath, "");
+                        FileStream newFile = new FileStream(UserPath, FileMode.OpenOrCreate);
+                        RestoreData(newFile, UserPath);
+                        newFile.Close();
                     }
                     catch (NullReferenceException)
                     {
@@ -63,7 +71,7 @@ namespace Fourth_Laba
                     }
                     break;
             }
-
+            file.Close();
         }
 
         static TextClass textFile = new TextClass();
@@ -81,19 +89,22 @@ namespace Fourth_Laba
 
             textFile.Content = outString;
             textFile.FileName = FileName;
-            ct.SaveState(textFile);
         }
 
         private static void FileWriter(string input, FileStream file)
         {
-            StreamWriter write = new StreamWriter(file, Encoding.Default);
-            write.Write(input);
+            StreamWriter writer = new StreamWriter(file, Encoding.Default);
+            writer.Write(input);
             textFile.Content = input;
+            writer.Close();
         }
 
-        private static void RestoreData()
+        private static void RestoreData(FileStream file, string UserPath)
         {
             ct.RestoreState(textFile);
+            StreamWriter writer = new StreamWriter(file, Encoding.Default);
+            writer.Write(textFile.Content);
+            writer.Close();
         }
     }
 }
