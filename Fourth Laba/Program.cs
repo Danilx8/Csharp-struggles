@@ -61,7 +61,9 @@ namespace Fourth_Laba
                         Choice = 0;
                         break;
                     case 3:
+                        Indexator.PerformIndexation(UserPath);
 
+                        Choice = 0;
                         break;
                 }
             }

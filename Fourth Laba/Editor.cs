@@ -13,7 +13,7 @@ namespace Fourth_Laba
         public static void InitiateEdit(string UserPath, string FileName)
         {
             Console.Write("Что будете делать с указанным файлом?\n\n1. Изменить текст\n" +
-                "2. Запомнить изменения\n3. Откатить изменения\n\nВведите номер опции: ");
+                "2. Запомнить состояние\n3. Откатить изменения\n\nВведите номер опции: ");
             int Choice = 0;
             while (Choice < 1 || Choice > 3)
             {
@@ -47,7 +47,7 @@ namespace Fourth_Laba
                             ch = Char.MinValue;
                         }
                     } while (ch != '~');
-                    FileWriter(Input, file);
+                    FileWriter(Input, UserPath);
                     Console.Clear();
                     Console.WriteLine("Изменения добавлены успешно");
                     Console.ReadKey();
@@ -58,11 +58,7 @@ namespace Fourth_Laba
                 case 3:
                     try
                     {
-                        file.Close();
-                        File.WriteAllText(UserPath, "");
-                        FileStream newFile = new FileStream(UserPath, FileMode.OpenOrCreate);
-                        RestoreData(newFile, UserPath);
-                        newFile.Close();
+                        RestoreData(UserPath);
                     }
                     catch (NullReferenceException)
                     {
@@ -89,20 +85,21 @@ namespace Fourth_Laba
 
             textFile.Content = outString;
             textFile.FileName = FileName;
+            reader.Close();
         }
 
-        private static void FileWriter(string input, FileStream file)
+        private static void FileWriter(string input, string UserPath)
         {
-            StreamWriter writer = new StreamWriter(file, Encoding.Default);
+            StreamWriter writer = new StreamWriter(UserPath, true);
             writer.Write(input);
             textFile.Content = input;
             writer.Close();
         }
 
-        private static void RestoreData(FileStream file, string UserPath)
+        private static void RestoreData(string UserPath)
         {
             ct.RestoreState(textFile);
-            StreamWriter writer = new StreamWriter(file, Encoding.Default);
+            StreamWriter writer = new StreamWriter(UserPath, false);
             writer.Write(textFile.Content);
             writer.Close();
         }
