@@ -24,10 +24,10 @@ namespace Fourth_Laba
             }
 
             FileStream file = new FileStream(UserPath, FileMode.OpenOrCreate);
-            FileReader(file, FileName);
             switch (Choice)
             {
                 case 1:
+                    FileReader(file, FileName);
                     Console.Clear();
                     Console.WriteLine("Введите новое содержание файла(нажмите ~ для выхода):");
                     char ch;
@@ -47,20 +47,22 @@ namespace Fourth_Laba
                             ch = Char.MinValue;
                         }
                     } while (ch != '~');
-                    FileWriter(Input, UserPath);
+                    FileWriter(Input, UserPath, FileName);
                     Console.Clear();
                     Console.WriteLine("Изменения добавлены успешно");
                     Console.ReadKey();
                     break;
                 case 2:
+                    FileReader(file, FileName);
                     ct.SaveState(textFile);
                     break;
                 case 3:
                     try
                     {
-                        RestoreData(UserPath);
+                        file.Close();
+                        RestoreData(UserPath, FileName);
                     }
-                    catch (NullReferenceException)
+                    catch (KeyNotFoundException)
                     {
                         Console.WriteLine("Не было изменений");
                         Console.ReadKey();
@@ -82,26 +84,33 @@ namespace Fourth_Laba
             {
                 outString += reader.ReadLine();
             }
-
-            textFile.Content = outString;
-            textFile.FileName = FileName;
+            try
+            {
+                textFile.Content.Add(FileName, outString);
+                textFile.FileName.Add(FileName);
+            }
+            catch (Exception)
+            {
+                textFile.Content[FileName] = outString;       
+            }
             reader.Close();
         }
 
-        private static void FileWriter(string input, string UserPath)
+        private static void FileWriter(string input, string UserPath, string FileName)
         {
-            StreamWriter writer = new StreamWriter(UserPath, true);
-            writer.Write(input);
-            textFile.Content = input;
-            writer.Close();
+            using (StreamWriter writer = new StreamWriter(UserPath, true))
+            {
+                writer.Write(input);
+            }
         }
 
-        private static void RestoreData(string UserPath)
+        private static void RestoreData(string UserPath, string FileName)
         {
             ct.RestoreState(textFile);
-            StreamWriter writer = new StreamWriter(UserPath, false);
-            writer.Write(textFile.Content);
-            writer.Close();
+            using (StreamWriter writer = new StreamWriter(UserPath, false))
+            {
+                writer.Write(textFile.Content[FileName]);
+            }
         }
     }
 }

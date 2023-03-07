@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -9,8 +10,8 @@ namespace Fourth_Laba
 {
     class Memento
     {
-        public string Content { get; set; }
-        public string FileName { get; set; }
+        public Dictionary<string, string> Content { get; set; }
+        public List<string> FileName { get; set; }
     }
 
     public class Caretaker
@@ -18,26 +19,30 @@ namespace Fourth_Laba
         private object memento;
         public void SaveState(IOriginator originator)
         {
-            memento = originator.GetMemento();
+            originator.SetMemento(memento);
         }
 
         public void RestoreState(IOriginator originator)
         {
-            originator.SetMemento(memento);
+            memento = originator.GetMemento();
         }
     }
 
     [Serializable]
     class TextClass: IOriginator
     {
-        public string Content { get; set; }
-        public string FileName { get; set; }
+        public Dictionary<string, string> Content { get; set; }
+        public List<string> FileName { get; set; }
 
-        public TextClass() { }
+        public TextClass() 
+        {
+            Content = new Dictionary<string, string>();
+            FileName = new List<string>();
+        }
         public TextClass(string Content, string FileName)
         {
-            this.Content = Content;
-            this.FileName = FileName;
+            this.Content.Add(FileName, Content);
+            this.FileName.Add(FileName);
         }
 
         public void BinarySerialization(FileStream fs) 
