@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/****************************
+ *                          *
+ *     Луговских Данил      *
+ *          ПИ-221          *
+ * Стандартный ввод и вывод *
+ *                          *
+ ***************************/
+
+
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace Fourth_Laba
 {
