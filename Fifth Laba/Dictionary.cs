@@ -6,8 +6,8 @@ namespace Fifth_Laba
 {
     class MyDictionary
     {
-        public Dictionary<string, List<string>> wrongWordsList = new Dictionary<string, List<string>>();
-        public string mask = "";
+        private Dictionary<string, List<string>> wrongWordsList = new Dictionary<string, List<string>>();
+        private string mask = "";
 
         public void SetDictionary(string Word, string[] wrongWords)
         {
@@ -19,7 +19,17 @@ namespace Fifth_Laba
             wrongWordsList.Add(Word, temp);
         }
 
-        public string GetMask(string Key)
+        public List<string> GetWrongWords(string Key)
+        {
+            return wrongWordsList[Key];
+        }
+
+        public void SetMask(string Mask)
+        {
+            mask = Mask;
+        }
+
+        public string GetMask()
         {
             return mask;
         }

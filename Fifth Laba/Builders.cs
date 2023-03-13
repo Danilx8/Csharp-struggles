@@ -21,7 +21,7 @@ namespace Fifth_Laba
             dictionary = new MyDictionary();
         }
 
-        private string CreateWordMask(string Key)
+        private void CreateWordMask(string Key)
         {
             Dictionary<int, List<char>> LettersOptions = new Dictionary<int, List<char>>();
             char[] rightLetters = Key.ToCharArray();
@@ -31,7 +31,7 @@ namespace Fifth_Laba
                 LettersOptions[letterIndex].Add(rightLetters[letterIndex]);
             }
 
-            foreach (string wrongWord in dictionary.wrongWordsList[Key])
+            foreach (string wrongWord in dictionary.GetWrongWords(Key))
             {
                 foreach (char letter in wrongWord.ToCharArray())
                 {
@@ -47,7 +47,7 @@ namespace Fifth_Laba
                 }
             }
 
-            StringBuilder stringBuilder = new StringBuilder(dictionary.mask);
+            StringBuilder stringBuilder = new StringBuilder(dictionary.GetMask());
             for (int letterIndex = 0; letterIndex < LettersOptions.Count; ++letterIndex)
             {
                 stringBuilder.Append('[');
@@ -57,16 +57,14 @@ namespace Fifth_Laba
                 }
                 stringBuilder.Append(']');
             }
-            dictionary.mask = stringBuilder.ToString();
-            return dictionary.mask;
+            dictionary.SetMask(stringBuilder.ToString());
         }
 
         void IStringBuilder.Correct(string filePath, string model, string[] wrongs)
         {
             dictionary.SetDictionary(model, wrongs);
             string content = new StreamReader(filePath).ReadToEnd();
-            //Regex regex = new Regex(dictionary.GetMask(model));
-            string pattern = dictionary.GetMask(model);
+            string pattern = dictionary.GetMask();
             content = Regex.Replace(content, pattern, model);
             using (StreamWriter writer = new StreamWriter(filePath, false))
             {
