@@ -12,20 +12,20 @@ namespace Fourth_Laba
             List<string> ReadyList = new List<string>();
             try
             {
-                var txtFiles = Directory.EnumerateFiles(Path, "*.txt", SearchOption.AllDirectories);
+                var TxtFiles = Directory.EnumerateFiles(Path, "*.txt", SearchOption.AllDirectories);
 
-                foreach (string currentFile in txtFiles)
+                foreach (string currentFile in TxtFiles)
                 {
-                    string fileName = currentFile.Substring(Path.Length);
-                    if(File.ReadLines(Path + fileName).Any(line => line.Contains(Keywords)) || fileName.Contains(Keywords))
+                    string FileName = currentFile.Substring(Path.Length);
+                    if(File.ReadLines(Path + FileName).Any(line => line.Contains(Keywords)) || FileName.Contains(Keywords))
                     {
-                        ReadyList.Add(fileName);
+                        ReadyList.Add(FileName);
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception CurrentException)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(CurrentException.Message);
             }
 
             if (ReadyList.Count != 0)

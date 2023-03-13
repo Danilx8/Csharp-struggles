@@ -19,43 +19,43 @@ namespace Fourth_Laba
                 }
             }
 
-            FileStream file = new FileStream(UserPath, FileMode.OpenOrCreate);
+            FileStream File = new FileStream(UserPath, FileMode.OpenOrCreate);
             switch (Choice)
             {
                 case 1:
-                    FileReader(file, FileName);
+                    FileReader(File, FileName);
                     Console.Clear();
                     Console.WriteLine("Введите новое содержание файла(нажмите ~ для выхода):");
-                    char ch;
-                    int element;
+                    char Character;
+                    int Element;
                     string Input = "";
                     do
                     {
-                        element = Console.Read();
+                        Element = Console.Read();
                         try
                         {
-                            ch = Convert.ToChar(element);
-                            Input += ch;
+                            Character = Convert.ToChar(Element);
+                            Input += Character;
                         }
                         catch(OverflowException)
                         {
-                            Console.WriteLine($"{element} - не подходящее значение");
-                            ch = Char.MinValue;
+                            Console.WriteLine($"{Element} - не подходящее значение");
+                            Character = Char.MinValue;
                         }
-                    } while (ch != '~');
+                    } while (Character != '~');
                     FileWriter(Input, UserPath, FileName);
                     Console.Clear();
                     Console.WriteLine("Изменения добавлены успешно");
                     Console.ReadKey();
                     break;
                 case 2:
-                    FileReader(file, FileName);
-                    ct.SaveState(textFile);
+                    FileReader(File, FileName);
+                    Caretaker.SaveState(TextFile);
                     break;
                 case 3:
                     try
                     {
-                        file.Close();
+                        File.Close();
                         RestoreData(UserPath, FileName);
                     }
                     catch (KeyNotFoundException)
@@ -65,31 +65,31 @@ namespace Fourth_Laba
                     }
                     break;
             }
-            file.Close();
+            File.Close();
         }
 
-        static TextClass textFile = new TextClass();
-        static Caretaker ct = new Caretaker();
+        static TextClass TextFile = new TextClass();
+        static Caretaker Caretaker = new Caretaker();
 
-        private static void FileReader(FileStream file, string FileName)
+        private static void FileReader(FileStream File, string FileName)
         {
             string outString = "";
-            var reader = new StreamReader(file);
+            var Reader = new StreamReader(File);
 
-            while (!reader.EndOfStream)
+            while (!Reader.EndOfStream)
             {
-                outString += reader.ReadLine();
+                outString += Reader.ReadLine();
             }
             try
             {
-                textFile.Content.Add(FileName, outString);
-                textFile.FileName.Add(FileName);
+                TextFile.Content.Add(FileName, outString);
+                TextFile.FileName.Add(FileName);
             }
             catch (Exception)
             {
-                textFile.Content[FileName] = outString;       
+                TextFile.Content[FileName] = outString;       
             }
-            reader.Close();
+            Reader.Close();
         }
 
         private static void FileWriter(string input, string UserPath, string FileName)
@@ -102,10 +102,10 @@ namespace Fourth_Laba
 
         private static void RestoreData(string UserPath, string FileName)
         {
-            ct.RestoreState(textFile);
-            using (StreamWriter writer = new StreamWriter(UserPath, false))
+            Caretaker.RestoreState(TextFile);
+            using (StreamWriter Writer = new StreamWriter(UserPath, false))
             {
-                writer.Write(textFile.Content[FileName]);
+                Writer.Write(TextFile.Content[FileName]);
             }
         }
     }

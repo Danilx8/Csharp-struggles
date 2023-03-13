@@ -15,14 +15,14 @@ namespace Fourth_Laba
     public class Caretaker
     {
         private object memento;
-        public void SaveState(IOriginator originator)
+        public void SaveState(IOriginator Originator)
         {
-            originator.SetMemento(memento);
+            Originator.SetMemento(memento);
         }
 
-        public void RestoreState(IOriginator originator)
+        public void RestoreState(IOriginator Originator)
         {
-            memento = originator.GetMemento();
+            memento = Originator.GetMemento();
         }
     }
 
@@ -43,38 +43,38 @@ namespace Fourth_Laba
             this.FileName.Add(FileName);
         }
 
-        public void BinarySerialization(FileStream fs) 
+        public void BinarySerialization(FileStream FileStream) 
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(fs, this);
-            fs.Flush();
-            fs.Close();
+            BinaryFormatter BinaryFormatter = new BinaryFormatter();
+            BinaryFormatter.Serialize(FileStream, this);
+            FileStream.Flush();
+            FileStream.Close();
         }
 
-        public void BinaryDeserialization(FileStream fs) 
+        public void BinaryDeserialization(FileStream Filestream) 
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            TextClass deserialized = (TextClass)bf.Deserialize(fs);
-            Content = deserialized.Content;
-            FileName = deserialized.FileName;
-            fs.Close();
+            BinaryFormatter BinaryFormatter = new BinaryFormatter();
+            TextClass Deserialized = (TextClass)BinaryFormatter.Deserialize(Filestream);
+            Content = Deserialized.Content;
+            FileName = Deserialized.FileName;
+            Filestream.Close();
         }
 
-        public void XmlSerialization(FileStream fs) 
+        public void XmlSerialization(FileStream FileStream) 
         {
-            XmlSerializer xmlserializer = new XmlSerializer(typeof(TextClass));
-            xmlserializer.Serialize(fs, this);
-            fs.Flush();
-            fs.Close();
+            XmlSerializer Xmlserializer = new XmlSerializer(typeof(TextClass));
+            Xmlserializer.Serialize(FileStream, this);
+            FileStream.Flush();
+            FileStream.Close();
         }
 
-        public void XmlDeserialization(FileStream fs) 
+        public void XmlDeserialization(FileStream FileStream) 
         {
-            XmlSerializer xmlserializer = new XmlSerializer(typeof(TextClass));
-            TextClass deserialized = (TextClass)xmlserializer.Deserialize(fs);
-            Content = deserialized.Content;
-            FileName = deserialized.FileName;
-            fs.Close();
+            XmlSerializer Xmlserializer = new XmlSerializer(typeof(TextClass));
+            TextClass Deserialized = (TextClass)Xmlserializer.Deserialize(FileStream);
+            Content = Deserialized.Content;
+            FileName = Deserialized.FileName;
+            FileStream.Close();
         }
 
         object IOriginator.GetMemento()
@@ -82,13 +82,13 @@ namespace Fourth_Laba
             return new Memento { Content = this.Content, FileName = this.FileName };
         }
 
-        void IOriginator.SetMemento(object memento)
+        void IOriginator.SetMemento(object Memento)
         {
-            if (memento is Memento)
+            if (Memento is Memento)
             {
-                var mem = memento as Memento;
-                Content = mem.Content;
-                FileName = mem.FileName;
+                var TempMemento = Memento as Memento;
+                Content = TempMemento.Content;
+                FileName = TempMemento.FileName;
             }
         }
     }
