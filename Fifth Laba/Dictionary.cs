@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Fifth_Laba
 {
-    static class Dictionary
+    class MyDictionary
     {
-        static Dictionary<string, List<string>> wrongWordsList = new Dictionary<string, List<string>>();
-        public static void SetDictionary(string Word, string[] wrongWords)
+        public Dictionary<string, List<string>> wrongWordsList = new Dictionary<string, List<string>>();
+        public string mask = "";
+
+        public void SetDictionary(string Word, string[] wrongWords)
         {
             List<string> temp = new List<string>();
             foreach(string currentWrongWord in wrongWords)
@@ -15,9 +19,9 @@ namespace Fifth_Laba
             wrongWordsList.Add(Word, temp);
         }
 
-        public static List<string> GetList(string Key)
+        public string GetMask(string Key)
         {
-            return wrongWordsList[Key];
+            return mask;
         }
     }
 }
