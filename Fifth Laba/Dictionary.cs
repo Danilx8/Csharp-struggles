@@ -6,32 +6,32 @@ namespace Fifth_Laba
 {
     class MyDictionary
     {
-        private Dictionary<string, List<string>> wrongWordsList = new Dictionary<string, List<string>>();
-        private string mask = "";
+        private Dictionary<string, List<string>> WrongWordsList = new Dictionary<string, List<string>>();
+        private string Mask = "";
 
         public void SetDictionary(string Word, string[] wrongWords)
         {
-            List<string> temp = new List<string>();
+            List<string> TempList = new List<string>();
             foreach(string currentWrongWord in wrongWords)
             {
-                temp.Add(currentWrongWord);
+                TempList.Add(currentWrongWord);
             }
-            wrongWordsList.Add(Word, temp);
+            WrongWordsList.Add(Word, TempList);
         }
 
         public List<string> GetWrongWords(string Key)
         {
-            return wrongWordsList[Key];
+            return WrongWordsList[Key];
         }
 
         public void SetMask(string Mask)
         {
-            mask = Mask;
+            this.Mask = Mask;
         }
 
         public string GetMask()
         {
-            return mask;
+            return Mask;
         }
     }
 }

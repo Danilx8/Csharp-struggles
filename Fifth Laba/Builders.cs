@@ -10,78 +10,81 @@ namespace Fifth_Laba
 {
     interface IStringBuilder
     {
-        void Correct(string filePath, string model, string[] wrongs);
+        void CreateMask(string Key);
+        void Correct(string FilePath, string Model, string[] WrongWords);
     }
 
     class StringSearch: IStringBuilder
     {
-        private MyDictionary dictionary;
+        private MyDictionary Dictionary;
         public StringSearch()
         {
-            dictionary = new MyDictionary();
+            Dictionary = new MyDictionary();
         }
 
-        private void CreateWordMask(string Key)
+        void IStringBuilder.CreateMask(string Key)
         {
             Dictionary<int, List<char>> LettersOptions = new Dictionary<int, List<char>>();
-            char[] rightLetters = Key.ToCharArray();
+            char[] RightLetters = Key.ToCharArray();
 
-            for (int letterIndex = 0; letterIndex < rightLetters.Length; ++letterIndex)
+            for (int LetterIndex = 0; LetterIndex < RightLetters.Length; ++LetterIndex)
             {
-                LettersOptions[letterIndex].Add(rightLetters[letterIndex]);
+                LettersOptions[LetterIndex].Add(RightLetters[LetterIndex]);
             }
 
-            foreach (string wrongWord in dictionary.GetWrongWords(Key))
+            foreach (string WrongWord in Dictionary.GetWrongWords(Key))
             {
-                foreach (char letter in wrongWord.ToCharArray())
+                foreach (char Letter in WrongWord.ToCharArray())
                 {
-                    for (int letterIndex = 0; letterIndex <
-                        Math.Min(Key.ToCharArray().Length, wrongWord.ToCharArray().Length);
-                        ++letterIndex)
+                    for (int LetterIndex = 0; LetterIndex <
+                        Math.Min(Key.ToCharArray().Length, WrongWord.ToCharArray().Length);
+                        ++LetterIndex)
                     {
-                        if (letter != rightLetters[letterIndex])
+                        if (Letter != RightLetters[LetterIndex])
                         {
-                            LettersOptions[letterIndex].Add(letter);
+                            LettersOptions[LetterIndex].Add(Letter);
                         }
                     }
                 }
             }
 
-            StringBuilder stringBuilder = new StringBuilder(dictionary.GetMask());
-            for (int letterIndex = 0; letterIndex < LettersOptions.Count; ++letterIndex)
+            StringBuilder StringBuilder = new StringBuilder(Dictionary.GetMask());
+            for (int LetterIndex = 0; LetterIndex < LettersOptions.Count; ++LetterIndex)
             {
-                stringBuilder.Append('[');
-                foreach (char letter in LettersOptions[letterIndex])
+                StringBuilder.Append('[');
+                foreach (char letter in LettersOptions[LetterIndex])
                 {
-                    stringBuilder.Append(letter);
+                    StringBuilder.Append(letter);
                 }
-                stringBuilder.Append(']');
+                StringBuilder.Append(']');
             }
-            dictionary.SetMask(stringBuilder.ToString());
+            Dictionary.SetMask(StringBuilder.ToString());
         }
 
-        void IStringBuilder.Correct(string filePath, string model, string[] wrongs)
+        void IStringBuilder.Correct(string FilePath, string Model, string[] WrongWords)
         {
-            dictionary.SetDictionary(model, wrongs);
-            string content = new StreamReader(filePath).ReadToEnd();
-            string pattern = dictionary.GetMask();
-            content = Regex.Replace(content, pattern, model);
-            using (StreamWriter writer = new StreamWriter(filePath, false))
+            Dictionary.SetDictionary(Model, WrongWords);
+            string Content = new StreamReader(FilePath).ReadToEnd();
+            string Pattern = Dictionary.GetMask();
+            Content = Regex.Replace(Content, Pattern, Model);
+            using (StreamWriter Writer = new StreamWriter(FilePath, false))
             {
-                writer.Write(content);
+                Writer.Write(Content);
             }
         }
     }
 
     class NumberSearch: IStringBuilder
     {
-        private MyDictionary dictionary;
+        private MyDictionary Dictionary;
         public NumberSearch()
         {
-            dictionary = new MyDictionary();
+            Dictionary = new MyDictionary();
         }
 
-        void IStringBuilder.Correct(string filePath, string model, string[] wrongs)
+        
+
+        void IStringBuilder.Correct(string FilePath, string Model, string[] WrongWords)
         {
 
         }
