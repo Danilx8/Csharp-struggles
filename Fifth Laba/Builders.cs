@@ -66,9 +66,9 @@ namespace Fifth_Laba
             for (int LetterIndex = 0; LetterIndex < LettersOptions.Count; ++LetterIndex)
             {
                 StringBuilder.Append('[');
-                foreach (char letter in LettersOptions[LetterIndex])
+                foreach (char Letter in LettersOptions[LetterIndex])
                 {
-                    StringBuilder.Append(letter);
+                    StringBuilder.Append(Letter);
                 }
                 StringBuilder.Append(']');
             }

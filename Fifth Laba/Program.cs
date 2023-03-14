@@ -27,32 +27,36 @@ namespace Fifth_Laba
                 }
             }
 
-            Director director = new Director();
+            Director Director = new Director();
             Console.Clear();
             Console.Write("Введите полный путь к файлу, в котором вы будете" +
                 "проводить изменеия: ");
             string UserFilePath = Console.ReadLine();
+            bool Error = false;
             try
             {
                 switch (UserChoice)
                 {
                     case 1:
-                        director.SetBuilder(new StringSearch());
-                        director.FixDocument(UserFilePath);
+                        Director.SetBuilder(new StringSearch());
                         break;
                     case 2:
-                        director.SetBuilder(new NumberSearch());
-                        director.FixDocument(UserFilePath);
+                        Director.SetBuilder(new NumberSearch());
                         break;
                 }
+                Director.FixDocument(UserFilePath);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Что-то пошло не так\n" + ex);
+                Error = true;
             }
             finally
             {
-                Console.WriteLine("Изменения совершены успешно");
+                if (!Error)
+                {
+                    Console.WriteLine("Изменения совершены успешно");
+                }
                 Console.ReadKey();
             }
         }

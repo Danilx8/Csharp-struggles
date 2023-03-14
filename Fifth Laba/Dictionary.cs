@@ -9,12 +9,12 @@ namespace Fifth_Laba
         private Dictionary<string, List<string>> WrongWordsList = new Dictionary<string, List<string>>();
         private string Mask = "";
 
-        public void SetDictionary(string Word, string[] wrongWords)
+        public void SetDictionary(string Word, string[] WrongWords)
         {
-            if (wrongWords != null)
+            if (WrongWords != null)
             {
                 List<string> TempList = new List<string>();
-                foreach (string currentWrongWord in wrongWords)
+                foreach (string currentWrongWord in WrongWords)
                 {
                     TempList.Add(currentWrongWord);
                 }
