@@ -8,8 +8,8 @@ namespace Fifth_Laba
 {
     interface IStringBuilder
     {
-        void CreateInstance(string Key);
-        void CreateMask(string Key);
+        void CreateInstance();
+        void CreateMask();
         void Correct(string FilePath);
     }
 
@@ -17,38 +17,41 @@ namespace Fifth_Laba
     {
         private MyDictionary Dictionary;
         private string Model;
-
+        
         public StringSearch()
         {
             Dictionary = new MyDictionary();
         }
 
-        void IStringBuilder.CreateInstance(string Key)
+        void IStringBuilder.CreateInstance()
         {
-            Model = Key;
+            Console.Write("Введите правильную форму слова: ");
+            Model = Console.ReadLine();
             Console.Write("Введите неправильные вариации вашего слова через запятую " +
                 "(для завершения нажмите enter: ");
             string WordsInput = Console.ReadLine();
             string[] WrongWords = WordsInput.Split(',');
-            Dictionary.SetDictionary(Key, WrongWords);
+            Dictionary.SetDictionary(Model, WrongWords);
         }
 
-        void IStringBuilder.CreateMask(string Key)
+        void IStringBuilder.CreateMask()
         {
             Dictionary<int, List<char>> LettersOptions = new Dictionary<int, List<char>>();
-            char[] RightLetters = Key.ToCharArray();
-
-            for (int LetterIndex = 0; LetterIndex < RightLetters.Length; ++LetterIndex)
+            char[] RightLetters = Model.ToCharArray();
+            List<char> Temp = new List<char>();
+            for (int ElementIndex = 0; ElementIndex < RightLetters.Length; ++ElementIndex)
             {
-                LettersOptions[LetterIndex].Add(RightLetters[LetterIndex]);
+                Temp.Add(RightLetters[ElementIndex]);
+                LettersOptions.Add(ElementIndex, Temp);
+                Temp.Clear();
             }
 
-            foreach (string WrongWord in Dictionary.GetWrongWords(Key))
+            foreach (string WrongWord in Dictionary.GetWrongWords(Model))
             {
                 foreach (char Letter in WrongWord.ToCharArray())
                 {
                     for (int LetterIndex = 0; LetterIndex <
-                        Math.Min(Key.ToCharArray().Length, WrongWord.ToCharArray().Length);
+                        Math.Min(Model.ToCharArray().Length, WrongWord.ToCharArray().Length);
                         ++LetterIndex)
                     {
                         if (Letter != RightLetters[LetterIndex])
@@ -74,7 +77,11 @@ namespace Fifth_Laba
 
         void IStringBuilder.Correct(string FilePath)
         {
-            string Content = new StreamReader(FilePath).ReadToEnd();
+            string Content;
+            using (StreamReader Reader = new StreamReader(FilePath))
+            {
+                Content = Reader.ReadToEnd();
+            }
             string Pattern = Dictionary.GetMask();
             Content = Regex.Replace(Content, Pattern, Model);
             using (StreamWriter Writer = new StreamWriter(FilePath, false))
@@ -87,26 +94,34 @@ namespace Fifth_Laba
     class NumberSearch: IStringBuilder
     {
         private MyDictionary Dictionary;
+        private string Model;
         public NumberSearch()
         {
             Dictionary = new MyDictionary();
         }
         
-        void IStringBuilder.CreateInstance(string Key)
+        void IStringBuilder.CreateInstance()
         {
-            Dictionary.SetDictionary(Key, null);
+            Console.Write("Введите номер, на который будут заменены все номера " +
+                "неправильного формата, в правильном формате: ");
+            Model = Console.ReadLine();
+            Dictionary.SetDictionary(Model, null);
         }
 
-        void IStringBuilder.CreateMask(string Key)
+        void IStringBuilder.CreateMask()
         {
             Dictionary.SetMask("\\(\\d{3}\\)\\s\\d{3}-\\d{2}-\\d{2}");
         }
 
         void IStringBuilder.Correct(string FilePath)
         {
-            string Content = new StreamReader(FilePath).ReadToEnd();
+            string Content;
+            using (StreamReader Reader = new StreamReader(FilePath))
+            {
+                Content = Reader.ReadToEnd();
+            }
             string Pattern = Dictionary.GetMask();
-            Content = Regex.Replace(Content, Pattern, " ");
+            Content = Regex.Replace(Content, Pattern, Model);
             using (StreamWriter Writer = new StreamWriter(FilePath, false))
             {
                 Writer.Write(Content);

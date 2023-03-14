@@ -16,10 +16,10 @@ namespace Fifth_Laba
             this.StringBuilder = StringBuilder;
         }
 
-        public void FixDocument(string FilePath, string Key)
+        public void FixDocument(string FilePath)
         {
-            StringBuilder.CreateInstance(Key);
-            StringBuilder.CreateMask(Key);
+            StringBuilder.CreateInstance();
+            StringBuilder.CreateMask();
             StringBuilder.Correct(FilePath);
         }
     }

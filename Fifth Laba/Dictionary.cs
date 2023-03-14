@@ -11,12 +11,15 @@ namespace Fifth_Laba
 
         public void SetDictionary(string Word, string[] wrongWords)
         {
-            List<string> TempList = new List<string>();
-            foreach(string currentWrongWord in wrongWords)
+            if (wrongWords != null)
             {
-                TempList.Add(currentWrongWord);
+                List<string> TempList = new List<string>();
+                foreach (string currentWrongWord in wrongWords)
+                {
+                    TempList.Add(currentWrongWord);
+                }
+                WrongWordsList.Add(Word, TempList);
             }
-            WrongWordsList.Add(Word, TempList);
         }
 
         public List<string> GetWrongWords(string Key)
