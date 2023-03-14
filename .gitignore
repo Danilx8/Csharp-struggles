@@ -400,3 +400,5 @@ FodyWeavers.xsd
 Properties
 App.config
 *.csproj
+*.sln
+*.txt
