@@ -113,7 +113,7 @@ namespace Sixth_Laba
             return Result;
         }
 
-        private static double[] ProblemSolver(SquareMatrix luMatrix, double[] ResultVector)
+        private static double[] MatrixSolver(SquareMatrix luMatrix, double[] ResultVector)
         {
             //LU * x = b; x - ?
             int Length = luMatrix.GetSize();
@@ -165,7 +165,7 @@ namespace Sixth_Laba
                         TemporaryVector[ColumnIndex] = 0.0;
                     }
                 }
-                double[] ResultingVector = ProblemSolver(luMatrix, TemporaryVector);
+                double[] ResultingVector = MatrixSolver(luMatrix, TemporaryVector);
                 for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
                 {
                     Result[ColumnIndex, RowIndex] = ResultingVector[ColumnIndex];
