@@ -4,58 +4,131 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Seventh_Laba
 {
-    class Generalized<T>: IEnumerable<T>
+    public class BinaryTree<T> : IEnumerable<T> where T : IComparable<T>
     {
-        private Collection<T> TreeNodes;
-        private ParameterExpression Value = Expression.Parameter(typeof(T));
-        private int CurrentIndex = -1;
-        
-        public void AppendParameters(T NewNode)
+        private BinaryTree<T> Parent, Left, Right;
+        private T Value;
+
+        public BinaryTree(T value, BinaryTree<T> parent)
         {
-            TreeNodes.Add(NewNode);
+            Value = value;
+            Parent = parent;
         }
 
-        private T Current(int PassedIndex) => TreeNodes[PassedIndex];
-
-        private T Next()
+        public void Add(T value)
         {
-            if (CurrentIndex == 0)
+            if (value.CompareTo(this.Value) < 0)
             {
-                throw new Exception("Выход за границы коллекции");
-            } else if (CurrentIndex == -1)
+                if (Left == null)
+                {
+                    Left = new BinaryTree<T>(value, this);
+                }
+                else
+                {
+                    Left?.Add(value);
+                }
+            }
+            else
             {
-                CurrentIndex = TreeNodes.Count - 2;
-                return Current(TreeNodes.Count - 1);
-            } else
-            {
-                return Current(CurrentIndex--);
+                if (Right == null)
+                {
+                    Right = new BinaryTree<T>(value, this);
+                }
+                else
+                {
+                    Right?.Add(value);
+                }
             }
         }
 
-        private T Previous()
+        public BinaryTree<T> Current() => this;
+
+        public BinaryTree<T> Next()
         {
-            if (CurrentIndex == -1 || CurrentIndex == TreeNodes.Count - 1)
+            if (Left != null)
             {
-                throw new Exception("Выход за границы коллекции");
-            } else 
+                return Left;
+            } else if (Right != null)
             {
-                return Current(CurrentIndex++);
+                return Right;
+            }
+            else
+            {
+                BinaryTree<T> CurrentElement = this;
+                BinaryTree<T> RightNeighbour = Parent.Right;
+                return DeadEndNext(CurrentElement, RightNeighbour);
             } 
+        }
+
+        private BinaryTree<T> DeadEndNext(BinaryTree<T> CurrentElement, BinaryTree<T> RightNeighbour)
+        {
+            if (CurrentElement == RightNeighbour)
+            {
+                return DeadEndNext(RightNeighbour, RightNeighbour.Parent.Right);
+            } else
+            {
+                return RightNeighbour;
+            }
+        }
+
+        public BinaryTree<T> Previous() => Parent; 
+
+        public static BinaryTree<T> operator ++(BinaryTree<T> CurrentNode)
+        {
+            return CurrentNode.Next();
+        }
+
+        public static BinaryTree<T> operator --(BinaryTree<T> CurrentNode)
+        {
+            return CurrentNode.Previous();
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return TreeNodes.GetEnumerator();
+            if (Left != null)
+            {
+                foreach (var item in Left)
+                {   
+                    yield return item;
+                }
+            }
+
+            yield return Value;
+
+            if (Right != null)
+            {
+                foreach (var item in Right)
+                {
+                    yield return item;
+                }
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            if (Left != null)
+            {
+                foreach (var item in Left)
+                {
+                    yield return item;
+                }
+            }
+
+            yield return Value;
+
+            if (Right != null)
+            {
+                foreach (var item in Right)
+                {
+                    yield return item;
+                }
+            }
         }
     }
 }
