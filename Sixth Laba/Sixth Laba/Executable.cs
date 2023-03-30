@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Sixth_Laba
 {
     internal class Executable
     {
+        const int ChoicesAmount = 6;
         static SquareMatrix FirstMatrix;
         static SquareMatrix SecondMatrix;
         static SquareMatrix ResultMatrix;
@@ -119,10 +115,16 @@ namespace Sixth_Laba
                             catch (NullReferenceException)
                             {
                                 Console.WriteLine("Выбранная матрица не сгенерирована");
+                                Console.ReadKey();
+                                Console.Clear();
                             }
                             break;
                         case 5:
                             goto Finished;
+                        case 6:
+                            Console.WriteLine(FirstMatrix.Determinant().ToString());
+                            Console.ReadKey();
+                            break;
                     }
                 }
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
@@ -142,7 +144,7 @@ namespace Sixth_Laba
             Console.WriteLine();
             Console.WriteLine("5. Выход");
             int Result = 0;
-            while ((Result < 1) || (Result > 5))
+            while ((Result < 1) || (Result > ChoicesAmount))
             {
                 Result = InputHandler();
             }

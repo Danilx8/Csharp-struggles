@@ -55,6 +55,24 @@ namespace Sixth_Laba
 
         public int GetSize() => MatrixSize;
 
+        private delegate SquareMatrix MyDelegate<in T, U, V, out Z>(T Input);
+        private SquareMatrix MatrixEventHandle(SquareMatrix Matrix,
+            MyDelegate<SquareMatrix, int[], int, SquareMatrix> MyMethod, out int[] PermutationArray, out int Toggle)
+        {
+            PermutationArray = null;
+            Toggle = 1;
+            if (Matrix.GetSize() == 1)
+            {
+                PermutationArray = new int[1];
+                PermutationArray[0] = 0;
+                return Matrix.Clone() as SquareMatrix;
+            }
+            else
+            {
+                return MyMethod(Matrix);
+            }
+        }
+
         private static SquareMatrix MatrixDecompose(SquareMatrix CurrentMatrix, out int[] PermutationArray,
             out int Toggle)
         {
@@ -146,7 +164,10 @@ namespace Sixth_Laba
         {
             int Length = this.GetSize();
             SquareMatrix Result = this.Clone() as SquareMatrix;
-            SquareMatrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
+            SquareMatrix luMatrix = MatrixEventHandle(this, (InMatrix) => 
+                MatrixDecompose(InMatrix, out int[] Perm, out int InToggle), 
+                    out int[] PermutationArray, out int Toggle);
+
             if (luMatrix == null)
             {
                 throw new Exception("Нельзя найти обратную матрицу");
@@ -156,7 +177,7 @@ namespace Sixth_Laba
             {
                 for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
                 {
-                    if (RowIndex == Perm[ColumnIndex])
+                    if (RowIndex == PermutationArray[ColumnIndex])
                     {
                         TemporaryVector[ColumnIndex] = 1.0;
                     }
@@ -176,7 +197,10 @@ namespace Sixth_Laba
 
         public double Determinant()
         {
-            SquareMatrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
+            SquareMatrix luMatrix = MatrixEventHandle(this, (InMatrix) =>
+                MatrixDecompose(InMatrix, out int[] Perm, out int InToggle),
+                    out int[] PermutationArray, out int Toggle);
+
             if (luMatrix == null)
             {
                 throw new Exception("Нельзя посчитать определитель матрицы");
