@@ -4,7 +4,7 @@ namespace Sixth_Laba
 {
     internal class Executable
     {
-        const int ChoicesAmount = 6;
+        const int ChoicesAmount = 7;
         static SquareMatrix FirstMatrix;
         static SquareMatrix SecondMatrix;
         static SquareMatrix ResultMatrix;
@@ -12,123 +12,145 @@ namespace Sixth_Laba
 
         static void Main(string[] args)
         {
+            bool Finished = false;
             int UserInput = 0;
             int MatricesSize = 0;
             do
             {
-                while (!Console.KeyAvailable)
+                UserInput = DisplayMenu();
+                switch (UserInput)
                 {
-                    UserInput = DisplayMenu();
-                    switch (UserInput)
-                    {
-                        case 1:
-                            Console.Clear();
-                            Console.Write("Введите размерность своих матриц: ");
-                            while (MatricesSize <= 0)
-                            {
-                                MatricesSize = InputHandler();
-                            }
-                            GenerateFirstMatrix(MatricesSize);
-                            GenerateSecondMatrix(MatricesSize);
-                            Console.Clear();
-                            break;
-                        case 2:
-                            Console.Clear();
-                            CalculationsMenu();
-                            break;
-                        case 3:
-                            DemonstrateMatrices();
-                            Console.Clear();
-                            break;
-                        case 4:
-                            Console.WriteLine("Первую или вторую?");
-                            int MatricesChoice = 0;
-                            while ((MatricesChoice < 1) || (MatricesChoice > 2))
-                            {
-                                MatricesChoice = InputHandler();
-                            }
-                            
-                            DiagonalMatrix DiagonalizeMatrix = delegate (SquareMatrix Matrix)
-                            {
-                                int MatrixSize = Matrix.GetSize();
+                    case 1:
+                        Console.Clear();
+                        Console.Write("Введите размерность своих матриц: ");
+                        while (MatricesSize <= 0)
+                        {
+                            MatricesSize = InputHandler();
+                        }
+                        GenerateFirstMatrix(MatricesSize);
+                        GenerateSecondMatrix(MatricesSize);
+                        Console.Clear();
+                        break;
+                    case 2:
+                        Console.Clear();
+                        CalculationsMenu();
+                        break;
+                    case 3:
+                        DemonstrateMatrices();
+                        Console.Clear();
+                        break;
+                    case 4:
+                        Console.WriteLine("Первую или вторую?");
+                        int MatricesChoice = 0;
+                        while ((MatricesChoice < 1) || (MatricesChoice > 2))
+                        {
+                            MatricesChoice = InputHandler();
+                        }
 
-                                for (int ColumnIndex = 0; ColumnIndex < MatrixSize; ColumnIndex++)
+                        DiagonalMatrix DiagonalizeMatrix = delegate (SquareMatrix Matrix)
+                        {
+                            int MatrixSize = Matrix.GetSize();
+
+                            for (int ColumnIndex = 0; ColumnIndex < MatrixSize; ColumnIndex++)
+                            {
+                                double DiagonalElement = Matrix[ColumnIndex, ColumnIndex];
+
+                                if (DiagonalElement == 0)
                                 {
-                                    double DiagonalElement = Matrix[ColumnIndex, ColumnIndex];
-
-                                    if (DiagonalElement == 0)
+                                    int SwapRowIndex = ColumnIndex + 1;
+                                    while (SwapRowIndex < MatrixSize && Matrix[SwapRowIndex, ColumnIndex] == 0)
                                     {
-                                        int SwapRowIndex = ColumnIndex + 1;
-                                        while (SwapRowIndex < MatrixSize && Matrix[SwapRowIndex, ColumnIndex] == 0)
-                                        {
-                                            SwapRowIndex++;
-                                        }
-
-                                        if (SwapRowIndex < MatrixSize)
-                                        {
-                                            for (int RowIndex = ColumnIndex; RowIndex < MatrixSize; RowIndex++)
-                                            {
-                                                double TempValue = Matrix[ColumnIndex, RowIndex];
-                                                Matrix[ColumnIndex, RowIndex] = Matrix[SwapRowIndex, RowIndex];
-                                                Matrix[SwapRowIndex, RowIndex] = TempValue;
-                                            }
-                                            DiagonalElement = Matrix[ColumnIndex, ColumnIndex];
-                                        }
+                                        SwapRowIndex++;
                                     }
 
-                                    for (int RowIndex = ColumnIndex; RowIndex < MatrixSize; RowIndex++)
+                                    if (SwapRowIndex < MatrixSize)
                                     {
-                                        Matrix[ColumnIndex, RowIndex] /= DiagonalElement;
-                                    }
-
-                                    for (int SwappedColumnIndex = 0; SwappedColumnIndex < MatrixSize; SwappedColumnIndex++)
-                                    {
-                                        if (SwappedColumnIndex == ColumnIndex)
-                                        {
-                                            continue;
-                                        }
-
-                                        double Factor = Matrix[SwappedColumnIndex, ColumnIndex] / Matrix[ColumnIndex, ColumnIndex];
                                         for (int RowIndex = ColumnIndex; RowIndex < MatrixSize; RowIndex++)
                                         {
-                                            Matrix[SwappedColumnIndex, RowIndex] -= Factor * Matrix[ColumnIndex, RowIndex];
+                                            double TempValue = Matrix[ColumnIndex, RowIndex];
+                                            Matrix[ColumnIndex, RowIndex] = Matrix[SwapRowIndex, RowIndex];
+                                            Matrix[SwapRowIndex, RowIndex] = TempValue;
                                         }
+                                        DiagonalElement = Matrix[ColumnIndex, ColumnIndex];
                                     }
                                 }
-                                return Matrix;
-                            };
 
-                            try
-                            {
-                                switch (MatricesChoice)
+                                for (int RowIndex = ColumnIndex; RowIndex < MatrixSize; RowIndex++)
                                 {
-                                    case 1:
-                                        ResultMatrix = DiagonalizeMatrix.Invoke(FirstMatrix);
-                                        DemonstrateResult();
-                                        break;
-                                    case 2:
-                                        ResultMatrix = DiagonalizeMatrix.Invoke(SecondMatrix);
-                                        DemonstrateResult();
-                                        break;
+                                    Matrix[ColumnIndex, RowIndex] /= DiagonalElement;
                                 }
-                            } 
-                            catch (NullReferenceException)
-                            {
-                                Console.WriteLine("Выбранная матрица не сгенерирована");
-                                Console.ReadKey();
-                                Console.Clear();
+
+                                for (int SwappedColumnIndex = 0; SwappedColumnIndex < MatrixSize; SwappedColumnIndex++)
+                                {
+                                    if (SwappedColumnIndex == ColumnIndex)
+                                    {
+                                        continue;
+                                    }
+
+                                    double Factor = Matrix[SwappedColumnIndex, ColumnIndex] / Matrix[ColumnIndex, ColumnIndex];
+                                    for (int RowIndex = ColumnIndex; RowIndex < MatrixSize; RowIndex++)
+                                    {
+                                        Matrix[SwappedColumnIndex, RowIndex] -= Factor * Matrix[ColumnIndex, RowIndex];
+                                    }
+                                }
                             }
-                            break;
-                        case 5:
-                            goto Finished;
-                        case 6:
-                            Console.WriteLine(FirstMatrix.Determinant().ToString());
+                            return Matrix;
+                        };
+
+                        try
+                        {
+                            switch (MatricesChoice)
+                            {
+                                case 1:
+                                    ResultMatrix = DiagonalizeMatrix.Invoke(FirstMatrix);
+                                    DemonstrateResult();
+                                    break;
+                                case 2:
+                                    ResultMatrix = DiagonalizeMatrix.Invoke(SecondMatrix);
+                                    DemonstrateResult();
+                                    break;
+                            }
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine("Выбранная матрица не сгенерирована");
                             Console.ReadKey();
-                            break;
-                    }
+                            Console.Clear();
+                        }
+                        break;
+                    case 5:
+                        Console.Clear();
+                        try
+                        {
+                            Console.WriteLine("Определитель первой матрицы:");
+                            Console.WriteLine(FirstMatrix.Determinant().ToString());
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine("Первая матрица не сгенерирована");
+                        }
+                        Console.ReadKey();
+                        Console.Clear();
+                        break;
+                    case 6:
+                        Console.Clear();
+                        try
+                        {
+                            Console.WriteLine("Определитель второй матрицы:");
+                            Console.WriteLine(SecondMatrix.Determinant().ToString());
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine("Вторая матрица не сгенерирована");
+                        }
+                        Console.ReadKey();
+                        Console.Clear();
+                        break;
+                    case 7:
+                        Finished = true;
+                        break;
                 }
-            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-        Finished:
+            } while (Finished == false);
             Console.WriteLine("Завершение программы. Нажмите на любую кнопку");
             Console.ReadKey();
         }
@@ -141,8 +163,10 @@ namespace Sixth_Laba
             Console.WriteLine("2. Приступить к расчётам");
             Console.WriteLine("3. Список матриц");
             Console.WriteLine("4. Привести матрицу к диагональному виду");
+            Console.WriteLine("5. Вычислить определитель первой матрицы");
+            Console.WriteLine("6. Вычислить определитель второй матрицы");
             Console.WriteLine();
-            Console.WriteLine("5. Выход");
+            Console.WriteLine("7. Выход");
             int Result = 0;
             while ((Result < 1) || (Result > ChoicesAmount))
             {
