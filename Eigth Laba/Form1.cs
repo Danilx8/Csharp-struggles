@@ -12,32 +12,32 @@ namespace Eigth_Laba
 
         }
 
-        private void FirstFileChoiceButton_Click(object sender, EventArgs e)
+        private void FirstDirectoryChoiceButton_Click(object sender, EventArgs e)
         {
-            using var ChosenFile = new OpenFileDialog();
+            using var ChosenFile = new FolderBrowserDialog();
             DialogResult Result = ChosenFile.ShowDialog();
 
             if (Result == DialogResult.OK &&
-                !string.IsNullOrWhiteSpace(ChosenFile.FileName))
+                !string.IsNullOrWhiteSpace(ChosenFile.SelectedPath))
             {
-                richTextBox1.Text = ChosenFile.FileName;
+                richTextBox1.Text = ChosenFile.SelectedPath;
             }
-            else if (ChosenFile.FileName != null)
+            else
             {
                 MessageBox.Show("Файл не выбран", "Ошибка!",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void SecondFileChoiceButton_Click(object sender, EventArgs e)
+        private void SecondDirectoryChoiceButton_Click(object sender, EventArgs e)
         {
-            using var ChosenFile = new OpenFileDialog();
+            using var ChosenFile = new FolderBrowserDialog();
             DialogResult Result = ChosenFile.ShowDialog();
 
             if (Result == DialogResult.OK &&
-                !string.IsNullOrWhiteSpace(ChosenFile.FileName))
+                !string.IsNullOrWhiteSpace(ChosenFile.SelectedPath))
             {
-                richTextBox2.Text = ChosenFile.FileName;
+                richTextBox2.Text = ChosenFile.SelectedPath;
             }
             else
             {

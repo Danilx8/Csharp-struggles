@@ -28,51 +28,52 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.FirstFileChoiceButton = new System.Windows.Forms.Button();
+            this.FirstDirectoryChoiceButton = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
-            this.SecondFileChoiceButton = new System.Windows.Forms.Button();
+            this.SecondDirectoryChoiceButton = new System.Windows.Forms.Button();
             this.SyncButton = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.SuspendLayout();
             // 
-            // FirstFileChoiceButton
+            // FirstDirectoryChoiceButton
             // 
-            this.FirstFileChoiceButton.Location = new System.Drawing.Point(674, 45);
-            this.FirstFileChoiceButton.Name = "FirstFileChoiceButton";
-            this.FirstFileChoiceButton.Size = new System.Drawing.Size(84, 24);
-            this.FirstFileChoiceButton.TabIndex = 0;
-            this.FirstFileChoiceButton.Text = "Обзор...";
-            this.FirstFileChoiceButton.UseVisualStyleBackColor = true;
-            this.FirstFileChoiceButton.Click += new System.EventHandler(this.FirstFileChoiceButton_Click);
+            this.FirstDirectoryChoiceButton.Location = new System.Drawing.Point(675, 68);
+            this.FirstDirectoryChoiceButton.Name = "FirstDirectoryChoiceButton";
+            this.FirstDirectoryChoiceButton.Size = new System.Drawing.Size(84, 24);
+            this.FirstDirectoryChoiceButton.TabIndex = 0;
+            this.FirstDirectoryChoiceButton.Text = "Обзор...";
+            this.FirstDirectoryChoiceButton.UseVisualStyleBackColor = true;
+            this.FirstDirectoryChoiceButton.Click += new System.EventHandler(this.FirstDirectoryChoiceButton_Click);
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(31, 44);
+            this.richTextBox1.Location = new System.Drawing.Point(32, 67);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.richTextBox1.Size = new System.Drawing.Size(612, 25);
             this.richTextBox1.TabIndex = 4;
-            this.richTextBox1.Text = "Выберите первый файл...";
+            this.richTextBox1.Text = "Выберите главную директорию...";
             this.richTextBox1.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(31, 94);
+            this.richTextBox2.Location = new System.Drawing.Point(32, 117);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.Size = new System.Drawing.Size(612, 25);
             this.richTextBox2.TabIndex = 6;
-            this.richTextBox2.Text = "Выберите второй файл...";
+            this.richTextBox2.Text = "Выберите побочную директорию...";
             this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
             // 
-            // SecondFileChoiceButton
+            // SecondDirectoryChoiceButton
             // 
-            this.SecondFileChoiceButton.Location = new System.Drawing.Point(674, 95);
-            this.SecondFileChoiceButton.Name = "SecondFileChoiceButton";
-            this.SecondFileChoiceButton.Size = new System.Drawing.Size(84, 24);
-            this.SecondFileChoiceButton.TabIndex = 5;
-            this.SecondFileChoiceButton.Text = "Обзор...";
-            this.SecondFileChoiceButton.UseVisualStyleBackColor = true;
-            this.SecondFileChoiceButton.Click += new System.EventHandler(this.SecondFileChoiceButton_Click);
+            this.SecondDirectoryChoiceButton.Location = new System.Drawing.Point(675, 118);
+            this.SecondDirectoryChoiceButton.Name = "SecondDirectoryChoiceButton";
+            this.SecondDirectoryChoiceButton.Size = new System.Drawing.Size(84, 24);
+            this.SecondDirectoryChoiceButton.TabIndex = 5;
+            this.SecondDirectoryChoiceButton.Text = "Обзор...";
+            this.SecondDirectoryChoiceButton.UseVisualStyleBackColor = true;
+            this.SecondDirectoryChoiceButton.Click += new System.EventHandler(this.SecondDirectoryChoiceButton_Click);
             // 
             // SyncButton
             // 
@@ -85,6 +86,16 @@
             this.SyncButton.UseVisualStyleBackColor = true;
             this.SyncButton.Click += new System.EventHandler(this.SyncButton_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Location = new System.Drawing.Point(12, 31);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(774, 128);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Выберите одинаковые файлы в разных директориях, которые вы хотите синхронизироват" +
+    "ь";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -92,9 +103,10 @@
             this.ClientSize = new System.Drawing.Size(798, 513);
             this.Controls.Add(this.SyncButton);
             this.Controls.Add(this.richTextBox2);
-            this.Controls.Add(this.SecondFileChoiceButton);
+            this.Controls.Add(this.SecondDirectoryChoiceButton);
             this.Controls.Add(this.richTextBox1);
-            this.Controls.Add(this.FirstFileChoiceButton);
+            this.Controls.Add(this.FirstDirectoryChoiceButton);
+            this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
             this.Text = "Синхронизатор файлов";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -104,10 +116,11 @@
 
         #endregion
 
-        private Button FirstFileChoiceButton;
+        private Button FirstDirectoryChoiceButton;
         private RichTextBox richTextBox1;
         private RichTextBox richTextBox2;
-        private Button SecondFileChoiceButton;
+        private Button SecondDirectoryChoiceButton;
         private Button SyncButton;
+        private GroupBox groupBox1;
     }
 }
