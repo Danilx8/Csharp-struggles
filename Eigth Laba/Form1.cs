@@ -34,7 +34,7 @@ namespace Eigth_Laba
                 if (Result.ContainsKey((int)StateCodes.UPDATED_FILES))
                 {
                     ModifiedFiles = Result[(int)StateCodes.UPDATED_FILES];
-                    Message += "Modified files: ";
+                    Message += "\nModified files: ";
                     foreach (string file in ModifiedFiles)
                     {
                         Message += Path.GetFileName(file) + ", ";
