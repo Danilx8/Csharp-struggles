@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Eigth_Laba
 {
-    internal interface IView
+    interface IView
     {
         string GetMainPath();
         string GetSecondaryPath();
-        event EventHandler<EventArgs> Connect;
+        void ShowResult(Dictionary<int, string[]> Result);
+        void Connected(bool Success);
         event EventHandler<EventArgs> Synchronize;
     }
 }

@@ -11,7 +11,9 @@ namespace Eigth_Laba
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Form1 form = new();
+            Presenter presenter = new(form);
+            Application.Run(form);
         }
     }
 }

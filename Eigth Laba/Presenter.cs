@@ -7,23 +7,29 @@ using System.Threading.Tasks;
 
 namespace Eigth_Laba
 {
-    internal class Presenter
+    class Presenter
     {
+        private IView view;
         private Model model;
-
-        public Presenter(string MainFolderPath, string SecondaryFolderPath)
+        public Presenter(IView NewView)
         {
-            model = new Model(MainFolderPath, SecondaryFolderPath);
+            view = NewView;
+            view.Synchronize += new EventHandler<EventArgs>(PassStates);
         }
 
-        public bool BootSynchronization(object sender, EventArgs e)
+        public void PassStates(object sender, EventArgs e)
         {
-            return (model.Synchronize());
-        }
-
-        public Dictionary<int, string[]> PassStates(object sender, EventArgs e)
-        {
-            return model.CheckStates();
+            Dictionary<int, string[]> Result;
+            if (model == null)
+            {
+                model = new Model(view.GetMainPath(), view.GetSecondaryPath());
+                view.Connected(model.Synchronize());
+            }
+            else
+            {
+                Result = model.CheckStates();
+                view.ShowResult(Result);
+            }
         }
     }
 }
