@@ -20,7 +20,6 @@ namespace Eigth_Laba
         private string secondaryFolderPath;
         private string[] MainFolderFiles;
         private string[] SecondaryFolderFiles;
-
         public Model(string MainFolderPath, string SecondaryFolderPath)
         {
             MainFolderFiles = Directory.GetFiles(MainFolderPath);
@@ -54,23 +53,36 @@ namespace Eigth_Laba
         
         public Dictionary<int, string[]> CheckStates()
         {
-            MainFolderFiles = Directory.GetFiles(mainFolderPath);
-            string[] updatedSecondaryFolderFiles = Directory.GetFiles(secondaryFolderPath);
+            string[] files = Directory.GetFiles(mainFolderPath);
+            files.CopyTo(MainFolderFiles, 0);
+            for (int FileIndex = 0; FileIndex < files.Length; ++FileIndex)
+            {
+                files[FileIndex] = Path.GetFileName(files[FileIndex]);
+            }
+            string[] updatedMainFolderFiles = files;
+
+            files = Directory.GetFiles(secondaryFolderPath);
+            for (int FileIndex = 0; FileIndex < files.Length; ++FileIndex)
+            {
+                files[FileIndex] = Path.GetFileName(files[FileIndex]);
+            }
+            string[] updatedSecondaryFolderFiles = files;
+            
             string[] addedFiles = Array.Empty<string>();
             string[] deletedFiles = Array.Empty<string>();
-            IEnumerable<string> addedFilesCollection = updatedSecondaryFolderFiles.Except(MainFolderFiles);
-            IEnumerable<string> deletedFilesCollection = MainFolderFiles.Except(updatedSecondaryFolderFiles);
+            IEnumerable<string> addedFilesCollection = updatedSecondaryFolderFiles.Except(updatedMainFolderFiles);
+            IEnumerable<string> deletedFilesCollection = updatedMainFolderFiles.Except(updatedSecondaryFolderFiles);
             List<string> UpdatedFiles = new();
             Dictionary<int, string[]> Result = new();
 
             if (addedFilesCollection != null)
             {
-                addedFiles = (string[])addedFilesCollection;
+                addedFiles = (addedFilesCollection.ToArray());
             }
 
             if (deletedFilesCollection != null)
             {
-                deletedFiles = (string[])deletedFilesCollection;
+                deletedFiles = (deletedFilesCollection.ToArray());
             }
 
             foreach(string FilePath in MainFolderFiles)
@@ -80,9 +92,9 @@ namespace Eigth_Laba
                 if (File.Exists(SecondaryPath)) {
                     using StreamReader MainFile = new(FilePath);
                     using StreamReader SecondaryFile = new(SecondaryPath);
-                    if (MainFile.GetHashCode() != SecondaryFile.GetHashCode())
+                    if (!Enumerable.SequenceEqual(File.ReadAllBytes(FilePath), File.ReadAllBytes(SecondaryPath)))
                     {
-                        UpdatedFiles.Add(SecondaryPath);
+                        UpdatedFiles.Add(MainFileName);
                     }
                 }
             }
