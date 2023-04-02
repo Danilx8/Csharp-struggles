@@ -93,8 +93,7 @@
             this.groupBox1.Size = new System.Drawing.Size(774, 128);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Выберите одинаковые файлы в разных директориях, которые вы хотите синхронизироват" +
-    "ь";
+            this.groupBox1.Text = "Выберите директории, которые вы хотите синхронизировать";
             // 
             // Form1
             // 
