@@ -272,37 +272,6 @@ namespace Sixth_Laba
             }
         }
 
-        public SquareMatrix Transpose()
-        {
-            SquareMatrix TransposedMatrix = this.Clone() as SquareMatrix;
-            for (int RowIndex = 0; RowIndex < this.GetSize(); ++RowIndex)
-            {
-                for (int ColumnIndex = 0; ColumnIndex < this.GetSize(); ++ColumnIndex)
-                {
-                    TransposedMatrix[ColumnIndex, RowIndex] = this[RowIndex, ColumnIndex];
-                }
-            }
-            return TransposedMatrix;
-        }
-
-        public double MatrixTrace()
-        {
-            double Result = 0.0;
-            for (int ElementIndex = 0; ElementIndex < this.GetSize(); ++ElementIndex)
-            {
-                if (this[ElementIndex, ElementIndex] != this[this.GetSize() - ElementIndex, 
-                    this.GetSize() - ElementIndex])
-                {
-                    Result += this[ElementIndex, ElementIndex] + this[this.GetSize() - ElementIndex,
-                        this.GetSize() - ElementIndex];
-                } else
-                {
-                    Result += this[ElementIndex, ElementIndex];
-                }
-            }
-            return Result;
-        }
-
         public static explicit operator double(SquareMatrix Matrix)
         {
             return Matrix.Determinant();
