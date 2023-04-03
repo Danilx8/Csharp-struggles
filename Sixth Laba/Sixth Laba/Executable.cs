@@ -4,11 +4,24 @@ namespace Sixth_Laba
 {
     internal class Executable
     {
-        const int ChoicesAmount = 7;
+        const int ChoicesAmount = 9;
         static SquareMatrix FirstMatrix;
         static SquareMatrix SecondMatrix;
         static SquareMatrix ResultMatrix;
         delegate SquareMatrix DiagonalMatrix(SquareMatrix Matrix);
+
+        enum Choices
+        {
+            GENERATE_MATRICES = 1,
+            BEGIN_CALCULATIONS,
+            SHOW_MATRICES,
+            DIAGONALIZE_MATRIX,
+            FIRST_DETERMINANT,
+            SECOND_DETERMINANT,
+            TRANSPOSE,
+            FIND_TRACE,
+            EXIT
+        };
 
         static void Main(string[] args)
         {
@@ -20,7 +33,7 @@ namespace Sixth_Laba
                 UserInput = DisplayMenu();
                 switch (UserInput)
                 {
-                    case 1:
+                    case (int)Choices.GENERATE_MATRICES:
                         Console.Clear();
                         Console.Write("Введите размерность своих матриц: ");
                         while (MatricesSize <= 0)
@@ -31,20 +44,20 @@ namespace Sixth_Laba
                         GenerateSecondMatrix(MatricesSize);
                         Console.Clear();
                         break;
-                    case 2:
+                    case (int)Choices.BEGIN_CALCULATIONS:
                         Console.Clear();
                         CalculationsMenu();
                         break;
-                    case 3:
+                    case (int)Choices.SHOW_MATRICES:
                         DemonstrateMatrices();
                         Console.Clear();
                         break;
-                    case 4:
+                    case (int)Choices.DIAGONALIZE_MATRIX:
                         Console.WriteLine("Первую или вторую?");
-                        int MatricesChoice = 0;
-                        while ((MatricesChoice < 1) || (MatricesChoice > 2))
+                        int MatricesDiagonalizationChoice = 0;
+                        while ((MatricesDiagonalizationChoice < 1) || (MatricesDiagonalizationChoice > 2))
                         {
-                            MatricesChoice = InputHandler();
+                            MatricesDiagonalizationChoice = InputHandler();
                         }
 
                         DiagonalMatrix DiagonalizeMatrix = delegate (SquareMatrix Matrix)
@@ -99,7 +112,7 @@ namespace Sixth_Laba
 
                         try
                         {
-                            switch (MatricesChoice)
+                            switch (MatricesDiagonalizationChoice)
                             {
                                 case 1:
                                     ResultMatrix = DiagonalizeMatrix.Invoke(FirstMatrix);
@@ -118,7 +131,7 @@ namespace Sixth_Laba
                             Console.Clear();
                         }
                         break;
-                    case 5:
+                    case (int)Choices.FIRST_DETERMINANT:
                         Console.Clear();
                         try
                         {
@@ -132,7 +145,7 @@ namespace Sixth_Laba
                         Console.ReadKey();
                         Console.Clear();
                         break;
-                    case 6:
+                    case (int)Choices.SECOND_DETERMINANT:
                         Console.Clear();
                         try
                         {
@@ -146,7 +159,65 @@ namespace Sixth_Laba
                         Console.ReadKey();
                         Console.Clear();
                         break;
-                    case 7:
+                    case (int)Choices.TRANSPOSE:
+                        Console.Clear();
+                        try
+                        {
+                            Console.WriteLine("Первую или вторую?");
+                            int MatricesTransposingChoice = 0;
+                            while ((MatricesTransposingChoice < 1) || (MatricesTransposingChoice > 2))
+                            {
+                                MatricesTransposingChoice = InputHandler();
+                            }
+                            switch (MatricesTransposingChoice)
+                            {
+                                case 1:
+                                    Console.WriteLine("Первая матрица в транспонированном виде:");
+                                    ResultMatrix = FirstMatrix.TransposeMatrix();
+                                    DemonstrateResult();
+                                    break;
+                                case 2:
+                                    Console.WriteLine("Вторая матрица в транспонированном виде:");
+                                    ResultMatrix = SecondMatrix.TransposeMatrix();
+                                    DemonstrateResult();
+                                    break;
+                            }
+                        }
+                        catch (NullReferenceException)
+                        {
+                            Console.WriteLine("Матрица не сгенерирована");
+                        }
+                        Console.ReadKey();
+                        break;
+                    case (int)Choices.FIND_TRACE:
+                        Console.Clear();
+                        try
+                        {
+                            Console.WriteLine("Первую или вторую?");
+                            int MatricesTracingChoice = 0;
+                            while ((MatricesTracingChoice < 1) || (MatricesTracingChoice > 2))
+                            {
+                                MatricesTracingChoice = InputHandler();
+                            }
+                            switch(MatricesTracingChoice)
+                            {
+                                case 1:
+                                    Console.WriteLine("След первой матрицы:");
+                                    Console.WriteLine(FirstMatrix.MatrixTrace());
+                                    break;
+                                case 2:
+                                    Console.WriteLine("Следы второй матрицы:");
+                                    Console.WriteLine(SecondMatrix.MatrixTrace());
+                                    break;
+                            }
+                        }
+                        catch(NullReferenceException)
+                        {
+                            Console.WriteLine("Матрица не сгенерирована");
+                        }
+                        Console.ReadKey();
+                        break;
+                    case (int)Choices.EXIT:
                         Finished = true;
                         break;
                 }
@@ -165,8 +236,10 @@ namespace Sixth_Laba
             Console.WriteLine("4. Привести матрицу к диагональному виду");
             Console.WriteLine("5. Вычислить определитель первой матрицы");
             Console.WriteLine("6. Вычислить определитель второй матрицы");
+            Console.WriteLine("7. Транспонировать матрицу");
+            Console.WriteLine("8. Вычислить след матрицы");
             Console.WriteLine();
-            Console.WriteLine("7. Выход");
+            Console.WriteLine("9. Выход");
             int Result = 0;
             while ((Result < 1) || (Result > ChoicesAmount))
             {
