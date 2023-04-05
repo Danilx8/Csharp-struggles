@@ -8,11 +8,6 @@ namespace Eigth_Laba
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            
-        }
-
         string IView.GetMainPath()
         {
             return richTextBox1.Text;
