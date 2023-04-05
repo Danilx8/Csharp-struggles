@@ -1,13 +1,14 @@
 ﻿using System;
 
-namespace Third_Laba
+namespace Sixth_Laba
 {
-    public class SquareMatrix: ICloneable, IComparable
+    public class SquareMatrix : ICloneable, IComparable
     {
         private int MatrixSize;
         private double[,] UserMatrix;
-        
-        public SquareMatrix(int InputMatrixSize) {
+
+        public SquareMatrix(int InputMatrixSize)
+        {
             try
             {
                 if (InputMatrixSize <= 0)
@@ -54,6 +55,24 @@ namespace Third_Laba
 
         public int GetSize() => MatrixSize;
 
+        private delegate SquareMatrix MyDelegate<in T, U, V, out Z>(T Input);
+        private SquareMatrix MatrixEventHandle(SquareMatrix Matrix,
+            MyDelegate<SquareMatrix, int[], int, SquareMatrix> MyMethod, out int[] PermutationArray, out int Toggle)
+        {
+            PermutationArray = null;
+            Toggle = 1;
+            if (Matrix.GetSize() == 1)
+            {
+                PermutationArray = new int[1];
+                PermutationArray[0] = 0;
+                return Matrix.Clone() as SquareMatrix;
+            }
+            else
+            {
+                return MyMethod(Matrix);
+            }
+        }
+
         private static SquareMatrix MatrixDecompose(SquareMatrix CurrentMatrix, out int[] PermutationArray,
             out int Toggle)
         {
@@ -67,13 +86,13 @@ namespace Third_Laba
             }
             Toggle = 1;
 
-            for (int MainElementCoordinates = 0; MainElementCoordinates < Length - 1; 
-                ++MainElementCoordinates) 
+            for (int MainElementCoordinates = 0; MainElementCoordinates < Length - 1;
+                ++MainElementCoordinates)
             {
                 double ColumnMax = Math.Abs(
                     Result[MainElementCoordinates, MainElementCoordinates]);
                 int PermRow = MainElementCoordinates;
-                for (int RowIndex = MainElementCoordinates + 1; 
+                for (int RowIndex = MainElementCoordinates + 1;
                     RowIndex < Length; ++RowIndex)
                 {
                     if (Result[RowIndex, MainElementCoordinates] > ColumnMax)
@@ -82,7 +101,7 @@ namespace Third_Laba
                         PermRow = RowIndex;
                     }
                 }
-                
+
                 if (PermRow != MainElementCoordinates)
                 {
                     for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
@@ -90,14 +109,14 @@ namespace Third_Laba
                         (Result[PermRow, ColumnIndex], Result[MainElementCoordinates, ColumnIndex]) =
                             (Result[MainElementCoordinates, ColumnIndex], Result[PermRow, ColumnIndex]); //кортеж
                     }
-                    (PermutationArray[MainElementCoordinates], PermutationArray[PermRow]) = 
+                    (PermutationArray[MainElementCoordinates], PermutationArray[PermRow]) =
                         (PermutationArray[PermRow], PermutationArray[MainElementCoordinates]); //тож кортеж
                     Toggle = -Toggle;
                 }
 
                 if (Math.Abs(Result[MainElementCoordinates, MainElementCoordinates]) < 1.0E-20)
                     return null;
-                for (int RowIndex = MainElementCoordinates + 1; RowIndex < Length; ++ RowIndex)
+                for (int RowIndex = MainElementCoordinates + 1; RowIndex < Length; ++RowIndex)
                 {
                     Result[RowIndex, MainElementCoordinates] /=
                         Result[MainElementCoordinates, MainElementCoordinates];
@@ -112,7 +131,7 @@ namespace Third_Laba
             return Result;
         }
 
-        private static double[] ProblemSolver(SquareMatrix luMatrix, double[] ResultVector)
+        private static double[] MatrixSolver(SquareMatrix luMatrix, double[] ResultVector)
         {
             //LU * x = b; x - ?
             int Length = luMatrix.GetSize();
@@ -145,29 +164,32 @@ namespace Third_Laba
         {
             int Length = this.GetSize();
             SquareMatrix Result = this.Clone() as SquareMatrix;
-            SquareMatrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
+            SquareMatrix luMatrix = MatrixEventHandle(this, (InMatrix) => 
+                MatrixDecompose(InMatrix, out int[] Perm, out int InToggle), 
+                    out int[] PermutationArray, out int Toggle);
+
             if (luMatrix == null)
             {
                 throw new Exception("Нельзя найти обратную матрицу");
             }
-            double[] b = new double[Length];
+            double[] TemporaryVector = new double[Length];
             for (int RowIndex = 0; RowIndex < Length; ++RowIndex)
             {
                 for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
                 {
-                    if (RowIndex == Perm[ColumnIndex])
+                    if (RowIndex == PermutationArray[ColumnIndex])
                     {
-                        b[ColumnIndex] = 1.0;
-                    } 
-                    else 
+                        TemporaryVector[ColumnIndex] = 1.0;
+                    }
+                    else
                     {
-                        b[ColumnIndex] = 0.0;
+                        TemporaryVector[ColumnIndex] = 0.0;
                     }
                 }
-                double[] x = ProblemSolver(luMatrix, b);
+                double[] ResultingVector = MatrixSolver(luMatrix, TemporaryVector);
                 for (int ColumnIndex = 0; ColumnIndex < Length; ++ColumnIndex)
                 {
-                    Result[ColumnIndex, RowIndex] = x[ColumnIndex];
+                    Result[ColumnIndex, RowIndex] = ResultingVector[ColumnIndex];
                 }
             }
             return Result;
@@ -175,7 +197,10 @@ namespace Third_Laba
 
         public double Determinant()
         {
-            SquareMatrix luMatrix = MatrixDecompose(this, out int[] Perm, out int Toggle);
+            SquareMatrix luMatrix = MatrixEventHandle(this, (InMatrix) =>
+                MatrixDecompose(InMatrix, out int[] Perm, out int InToggle),
+                    out int[] PermutationArray, out int Toggle);
+
             if (luMatrix == null)
             {
                 throw new Exception("Нельзя посчитать определитель матрицы");
@@ -220,13 +245,13 @@ namespace Third_Laba
 
         public override bool Equals(object obj)
         {
-            if ((obj == null) || ! this.GetType().Equals(obj.GetType()))
+            if ((obj == null) || !this.GetType().Equals(obj.GetType()))
             {
                 return false;
-            } 
+            }
             else
             {
-                SquareMatrix AnotherMatrix = ((SquareMatrix) obj).Clone() as SquareMatrix;
+                SquareMatrix AnotherMatrix = ((SquareMatrix)obj).Clone() as SquareMatrix;
                 if (this.GetSize() == AnotherMatrix.GetSize())
                 {
                     int Length = this.GetSize();
@@ -258,18 +283,18 @@ namespace Third_Laba
         }
 
         public override int GetHashCode() => Convert.ToInt32(this.ToString());
-   
+
         public static SquareMatrix operator +(SquareMatrix CurrentMatrix) => CurrentMatrix;
 
         public static SquareMatrix operator +(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix)
         {
             SquareMatrix NewMatrix = SecondMatrix.Clone() as SquareMatrix;
-            
+
             for (int RowIndex = 0; RowIndex < NewMatrix.GetSize(); ++RowIndex)
             {
                 for (int ColumnIndex = 0; ColumnIndex < NewMatrix.GetSize(); ++ColumnIndex)
                 {
-                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix[RowIndex, ColumnIndex] + 
+                    NewMatrix[RowIndex, ColumnIndex] = FirstMatrix[RowIndex, ColumnIndex] +
                         SecondMatrix[RowIndex, ColumnIndex];
                 }
             }
@@ -279,7 +304,7 @@ namespace Third_Laba
         public static SquareMatrix operator +(SquareMatrix FirstMatrix, int Number)
         {
             SquareMatrix NewMatrix = FirstMatrix.Clone() as SquareMatrix;
- 
+
             for (int RowIndex = 0; RowIndex < NewMatrix.GetSize(); ++RowIndex)
             {
                 for (int ColumnIndex = 0; ColumnIndex < NewMatrix.GetSize(); ++ColumnIndex)
@@ -339,10 +364,10 @@ namespace Third_Laba
                 for (int ColumnIndex = 0; ColumnIndex < FirstMatrix.GetSize();
                     ++ColumnIndex)
                 {
-                    for (int MatrixElement = 0; MatrixElement < FirstMatrix.GetSize(); 
+                    for (int MatrixElement = 0; MatrixElement < FirstMatrix.GetSize();
                         ++MatrixElement)
                     {
-                        CurrentElement += FirstMatrix[RowIndex, MatrixElement] * 
+                        CurrentElement += FirstMatrix[RowIndex, MatrixElement] *
                             SecondMatrix[MatrixElement, ColumnIndex];
                     }
                     NewMatrix[RowIndex, ColumnIndex] = CurrentElement;
@@ -353,15 +378,15 @@ namespace Third_Laba
         }
 
         public static bool operator <=(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() <= SecondMatrix.Determinant();
-        
+
         public static bool operator >=(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() >= SecondMatrix.Determinant();
-        
+
         public static bool operator <(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() < SecondMatrix.Determinant();
-    
+
         public static bool operator >(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Determinant() > SecondMatrix.Determinant();
 
         public static bool operator ==(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => FirstMatrix.Equals(SecondMatrix);
-        
+
         public static bool operator !=(SquareMatrix FirstMatrix, SquareMatrix SecondMatrix) => !(FirstMatrix.Equals(SecondMatrix));
 
         public static bool operator true(SquareMatrix CurrentMatrix) => CurrentMatrix.GetSize() != 0;
