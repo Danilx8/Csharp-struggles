@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
+﻿using System.Xml;
 
 namespace Ninth_Laba
 {
@@ -44,7 +39,7 @@ namespace Ninth_Laba
             return Success;
         }
 
-        public Syncronizations CheckStates()
+        public Synchronizations CheckStates()
         {
             string[] files = Directory.GetFiles(mainFolderPath);
             files.CopyTo(MainFolderFiles, 0);
@@ -66,7 +61,7 @@ namespace Ninth_Laba
             IEnumerable<string> addedFilesCollection = updatedSecondaryFolderFiles.Except(updatedMainFolderFiles);
             IEnumerable<string> deletedFilesCollection = updatedMainFolderFiles.Except(updatedSecondaryFolderFiles);
             List<string> UpdatedFiles = new();
-            Syncronizations Result = new();
+            Synchronizations Result = new();
 
             if (addedFilesCollection != null)
             {
@@ -117,6 +112,8 @@ namespace Ninth_Laba
             {
                 Result.WriteXml(Writer);
             }
+
+            Result.WriteJson();
             //Writer.WriteEndElement();
             return Result;
         }

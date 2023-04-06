@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ninth_Laba
+﻿namespace Ninth_Laba
 {
     class Presenter
     {
@@ -19,7 +12,7 @@ namespace Ninth_Laba
 
         public void PassStates(object sender, EventArgs e)
         {
-            Syncronizations Result;
+            Synchronizations Result;
             if (model == null)
             {
                 model = new Model(view.GetMainPath(), view.GetSecondaryPath());

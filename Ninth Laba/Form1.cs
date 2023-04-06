@@ -1,4 +1,3 @@
-using Microsoft.VisualBasic;
 using System.Xml;
 
 namespace Ninth_Laba
@@ -21,20 +20,57 @@ namespace Ninth_Laba
             return richTextBox2.Text;
         }
         
-        void IView.ShowResult(Syncronizations Result)
+        void IView.ShowResult(Synchronizations Result)
         {
             string Message = "";
 
-            XmlDocument XmlDoc = new XmlDocument();
-            XmlDoc.Load("Sessions.xml");
+            #region XML Realization
 
-            XmlNodeList ActionTypeNodes = XmlDoc.GetElementsByTagName("Action_Type");
-            if (ActionTypeNodes.Count != 0)
+            //XmlDocument XmlDoc = new XmlDocument();
+            //XmlDoc.Load("Sessions.xml");
+
+            //XmlNodeList ActionTypeNodes = XmlDoc.GetElementsByTagName("Action_Type");
+            //if (ActionTypeNodes.Count != 0)
+            //{
+            //    foreach (XmlNode ActionTypeNode in ActionTypeNodes)
+            //    {
+            //        XmlNodeList FileNameNodes = ActionTypeNode.SelectNodes("following-sibling::File_name[1]/*[1]/string");
+            //        switch (ActionTypeNode.SelectSingleNode("string").InnerText)
+            //        {
+            //            case "Add":
+            //                Message += "Добавленные файлы: ";
+            //                break;
+            //            case "Delete":
+            //                Message += "Удалённые файлы: ";
+            //                break;
+            //            case "Edit":
+            //                Message += "Изменённые файлы: ";
+            //                break;
+            //        }
+            //        foreach (XmlNode FileNameNode in FileNameNodes)
+            //        {
+            //            Message += FileNameNode.InnerText + ' ';
+            //        }
+            //        Message += '\n';
+            //    }
+            //} 
+            //else
+            //{
+            //    Message += "Синхронизация не требуется - всё уже синхронизировано";
+            //}
+
+            #endregion
+
+            #region JSON Realization
+
+            Synchronizations DeserializedDictionary = new Synchronizations();
+            DeserializedDictionary = DeserializedDictionary.ReadJson();
+
+            if (DeserializedDictionary.Count != 0)
             {
-                foreach (XmlNode ActionTypeNode in ActionTypeNodes)
+                foreach (string ActionType in DeserializedDictionary.Keys)
                 {
-                    XmlNodeList FileNameNodes = ActionTypeNode.SelectNodes("following-sibling::File_name[1]/*[1]/string");
-                    switch (ActionTypeNode.SelectSingleNode("string").InnerText)
+                    switch (ActionType)
                     {
                         case "Add":
                             Message += "Добавленные файлы: ";
@@ -46,17 +82,18 @@ namespace Ninth_Laba
                             Message += "Изменённые файлы: ";
                             break;
                     }
-                    foreach (XmlNode FileNameNode in FileNameNodes)
+                    foreach (string FileName in DeserializedDictionary[ActionType])
                     {
-                        Message += FileNameNode.InnerText + ' ';
+                        Message += FileName + ", ";
                     }
                     Message += '\n';
                 }
-            } 
+            }
             else
             {
                 Message += "Синхронизация не требуется - всё уже синхронизировано";
             }
+            #endregion
 
             MessageBox.Show(Message, "Результат синхронизации", MessageBoxButtons.OK);
         }

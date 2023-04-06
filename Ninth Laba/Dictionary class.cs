@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using System.Xml;
+using System.Text.Json;
 
 namespace Ninth_Laba
 {
-    public class Syncronizations : SerializableDictionary<string, string[]>
+    public class Synchronizations : SerializableDictionary<string, string[]>
     {
         protected override string ItemName
         {
@@ -86,6 +82,19 @@ namespace Ninth_Laba
                 ValueSerializer.Serialize(Writer, Value);
                 Writer.WriteEndElement();
             }
+        }
+
+        public Synchronizations ReadJson()
+        {
+            string JsonString = File.ReadAllText("Session.json");
+
+            return JsonSerializer.Deserialize<Synchronizations>(JsonString);
+        }
+
+        public void WriteJson()
+        {
+            string SerializedDictionary = JsonSerializer.Serialize(this);
+            File.WriteAllText("Session.json", SerializedDictionary);
         }
     }
 }
