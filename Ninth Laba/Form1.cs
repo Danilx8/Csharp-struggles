@@ -1,4 +1,6 @@
-namespace Eigth_Laba
+using System.Xml;
+
+namespace Ninth_Laba
 {
     public partial class Form1 : Form, IView
     {
@@ -18,47 +20,79 @@ namespace Eigth_Laba
             return richTextBox2.Text;
         }
         
-        void IView.ShowResult(Dictionary<int, string[]> Result)
+        void IView.ShowResult(Syncronizations Result)
         {
             string Message = "";
-            if (!Result.ContainsKey((int)StateCodes.UP_TO_DATE))
-            {
-                string[] ModifiedFiles;
-                string[] DeletedFiles;
-                string[] AddedFiles;
-                if (Result.ContainsKey((int)StateCodes.UPDATED_FILES))
-                {
-                    ModifiedFiles = Result[(int)StateCodes.UPDATED_FILES];
-                    Message += "\nModified files: ";
-                    foreach (string file in ModifiedFiles)
-                    {
-                        Message += Path.GetFileName(file) + ", ";
-                    }
-                }
-                if (Result.ContainsKey((int)StateCodes.DELETED_FILES))
-                {
+            string[] ModifiedFiles;
+            string[] DeletedFiles;
+            string[] AddedFiles;
 
-                    DeletedFiles = Result[(int)StateCodes.DELETED_FILES];
-                    Message += "\nDeleted files: ";
-                    foreach (string file in DeletedFiles)
-                    {
-                        Message += Path.GetFileName(file) + ", ";
-                    }
-                }
-                if (Result.ContainsKey((int)StateCodes.NEW_FILES))
-                {
-                    AddedFiles = Result[(int)StateCodes.NEW_FILES];
-                    Message += "\nAdded files: ";
-                    foreach (string file in AddedFiles)
-                    {
-                        Message += Path.GetFileName(file) + ", ";
-                    }
-                }
-            }
-            else
+            XmlDocument XmlDoc = new XmlDocument();
+            XmlDoc.Load("Sessions.xml");
+
+            XmlNodeList ActionTypeNodes = XmlDoc.GetElementsByTagName("Action_Type");
+            foreach (XmlNode ActionTypeNode in ActionTypeNodes)
             {
-                Message += Result[0][0];
+                XmlNodeList FileNameNodes = ActionTypeNode.SelectNodes("following-sibling::File_name[1]/*[1]/string");
+                switch (ActionTypeNode.SelectSingleNode("string").InnerText)
+                {
+                    case "Add":
+                        Message += "Добавленные файлы: ";
+                        break;
+                    case "Delete":
+                        Message += "Удалённые файлы: ";
+                        break;
+                    case "Edit":
+                        Message += "Изменённые файлы: ";
+                        break;
+                }
+                foreach (XmlNode FileNameNode in FileNameNodes)
+                {
+                    Message += FileNameNode.InnerText + ' ';
+                }
+                Message += '\n';
             }
+
+
+           
+            //if (!Result.ContainsKey("Nothing"))
+            //{
+            //    string[] ModifiedFiles;
+            //    string[] DeletedFiles;
+            //    string[] AddedFiles;
+            //    if (Result.ContainsKey("Edit"))
+            //    {
+            //        ModifiedFiles = Result["Edit"];
+            //        Message += "\nModified files: ";
+            //        foreach (string file in ModifiedFiles)
+            //        {
+            //            Message += Path.GetFileName(file) + ", ";
+            //        }
+            //    }
+            //    if (Result.ContainsKey("Delete"))
+            //    {
+
+            //        DeletedFiles = Result["Delete"];
+            //        Message += "\nDeleted files: ";
+            //        foreach (string file in DeletedFiles)
+            //        {
+            //            Message += Path.GetFileName(file) + ", ";
+            //        }
+            //    }
+            //    if (Result.ContainsKey("Add"))
+            //    {
+            //        AddedFiles = Result["Add"];
+            //        Message += "\nAdded files: ";
+            //        foreach (string file in AddedFiles)
+            //        {
+            //            Message += Path.GetFileName(file) + ", ";
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    Message += Result["Nothing"][0];
+            //}
             MessageBox.Show(Message, "Результат синхронизации", MessageBoxButtons.OK);
         }
 

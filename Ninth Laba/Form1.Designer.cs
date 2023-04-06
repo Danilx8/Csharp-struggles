@@ -1,4 +1,4 @@
-﻿namespace Eigth_Laba
+﻿namespace Ninth_Laba
 {
     partial class Form1
     {
@@ -108,7 +108,6 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "Form1";
             this.Text = "Синхронизатор файлов";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
 
         }

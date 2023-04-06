@@ -3,17 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
-namespace Eigth_Laba
+namespace Ninth_Laba
 {
-    public enum StateCodes
-    {
-        UP_TO_DATE,
-        UPDATED_FILES,
-        DELETED_FILES,
-        NEW_FILES
-    }
-
     class Model
     {
         private string mainFolderPath;
@@ -50,8 +43,8 @@ namespace Eigth_Laba
             }
             return Success;
         }
-        
-        public Dictionary<int, string[]> CheckStates()
+
+        public Syncronizations CheckStates()
         {
             string[] files = Directory.GetFiles(mainFolderPath);
             files.CopyTo(MainFolderFiles, 0);
@@ -67,13 +60,13 @@ namespace Eigth_Laba
                 files[FileIndex] = Path.GetFileName(files[FileIndex]);
             }
             string[] updatedSecondaryFolderFiles = files;
-            
+
             string[] addedFiles = Array.Empty<string>();
             string[] deletedFiles = Array.Empty<string>();
             IEnumerable<string> addedFilesCollection = updatedSecondaryFolderFiles.Except(updatedMainFolderFiles);
             IEnumerable<string> deletedFilesCollection = updatedMainFolderFiles.Except(updatedSecondaryFolderFiles);
             List<string> UpdatedFiles = new();
-            Dictionary<int, string[]> Result = new();
+            Syncronizations Result = new();
 
             if (addedFilesCollection != null)
             {
@@ -85,7 +78,7 @@ namespace Eigth_Laba
                 deletedFiles = (deletedFilesCollection.ToArray());
             }
 
-            foreach(string FilePath in MainFolderFiles)
+            foreach (string FilePath in MainFolderFiles)
             {
                 string MainFileName = Path.GetFileName(FilePath);
                 string SecondaryPath = secondaryFolderPath + @"\" + MainFileName;
@@ -101,25 +94,30 @@ namespace Eigth_Laba
 
             if (addedFiles.Length != 0)
             {
-                Result.Add((int)StateCodes.NEW_FILES, addedFiles);
+                Result.Add("Add", addedFiles);
             }
 
             if (deletedFiles.Length != 0)
             {
-                Result.Add((int)StateCodes.DELETED_FILES, deletedFiles);
+                Result.Add("Delete", deletedFiles);
             }
 
             if (UpdatedFiles.Count != 0)
             {
-                Result.Add((int)StateCodes.UPDATED_FILES, UpdatedFiles.ToArray());
-            }
-            
-            if (Result.Count == 0)
-            {
-                string[] AllGood = { "Все файлы синхронизированы!" };
-                Result.Add((int)StateCodes.UP_TO_DATE, AllGood);
+                Result.Add("Edit", UpdatedFiles.ToArray());
             }
 
+            //if (Result.Count == 0)
+            //{
+            //    string[] AllGood = { "Все файлы синхронизированы!" };
+            //    Result.Add("Nothing", AllGood);
+            //}
+
+            using (XmlWriter Writer = XmlWriter.Create("Sessions.xml"))
+            {
+                Result.WriteXml(Writer);
+            }
+            //Writer.WriteEndElement();
             return Result;
         }
     }

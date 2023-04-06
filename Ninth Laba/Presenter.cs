@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Eigth_Laba
+namespace Ninth_Laba
 {
     class Presenter
     {
@@ -19,7 +19,7 @@ namespace Eigth_Laba
 
         public void PassStates(object sender, EventArgs e)
         {
-            Dictionary<int, string[]> Result;
+            Syncronizations Result;
             if (model == null)
             {
                 model = new Model(view.GetMainPath(), view.GetSecondaryPath());

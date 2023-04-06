@@ -1,4 +1,4 @@
-namespace Eigth_Laba
+namespace Ninth_Laba
 {
     internal static class Program
     {
