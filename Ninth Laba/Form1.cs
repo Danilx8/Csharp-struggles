@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic;
 using System.Xml;
 
 namespace Ninth_Laba
@@ -23,76 +24,40 @@ namespace Ninth_Laba
         void IView.ShowResult(Syncronizations Result)
         {
             string Message = "";
-            string[] ModifiedFiles;
-            string[] DeletedFiles;
-            string[] AddedFiles;
 
             XmlDocument XmlDoc = new XmlDocument();
             XmlDoc.Load("Sessions.xml");
 
             XmlNodeList ActionTypeNodes = XmlDoc.GetElementsByTagName("Action_Type");
-            foreach (XmlNode ActionTypeNode in ActionTypeNodes)
+            if (ActionTypeNodes.Count != 0)
             {
-                XmlNodeList FileNameNodes = ActionTypeNode.SelectNodes("following-sibling::File_name[1]/*[1]/string");
-                switch (ActionTypeNode.SelectSingleNode("string").InnerText)
+                foreach (XmlNode ActionTypeNode in ActionTypeNodes)
                 {
-                    case "Add":
-                        Message += "Добавленные файлы: ";
-                        break;
-                    case "Delete":
-                        Message += "Удалённые файлы: ";
-                        break;
-                    case "Edit":
-                        Message += "Изменённые файлы: ";
-                        break;
+                    XmlNodeList FileNameNodes = ActionTypeNode.SelectNodes("following-sibling::File_name[1]/*[1]/string");
+                    switch (ActionTypeNode.SelectSingleNode("string").InnerText)
+                    {
+                        case "Add":
+                            Message += "Добавленные файлы: ";
+                            break;
+                        case "Delete":
+                            Message += "Удалённые файлы: ";
+                            break;
+                        case "Edit":
+                            Message += "Изменённые файлы: ";
+                            break;
+                    }
+                    foreach (XmlNode FileNameNode in FileNameNodes)
+                    {
+                        Message += FileNameNode.InnerText + ' ';
+                    }
+                    Message += '\n';
                 }
-                foreach (XmlNode FileNameNode in FileNameNodes)
-                {
-                    Message += FileNameNode.InnerText + ' ';
-                }
-                Message += '\n';
+            } 
+            else
+            {
+                Message += "Синхронизация не требуется - всё уже синхронизировано";
             }
 
-
-           
-            //if (!Result.ContainsKey("Nothing"))
-            //{
-            //    string[] ModifiedFiles;
-            //    string[] DeletedFiles;
-            //    string[] AddedFiles;
-            //    if (Result.ContainsKey("Edit"))
-            //    {
-            //        ModifiedFiles = Result["Edit"];
-            //        Message += "\nModified files: ";
-            //        foreach (string file in ModifiedFiles)
-            //        {
-            //            Message += Path.GetFileName(file) + ", ";
-            //        }
-            //    }
-            //    if (Result.ContainsKey("Delete"))
-            //    {
-
-            //        DeletedFiles = Result["Delete"];
-            //        Message += "\nDeleted files: ";
-            //        foreach (string file in DeletedFiles)
-            //        {
-            //            Message += Path.GetFileName(file) + ", ";
-            //        }
-            //    }
-            //    if (Result.ContainsKey("Add"))
-            //    {
-            //        AddedFiles = Result["Add"];
-            //        Message += "\nAdded files: ";
-            //        foreach (string file in AddedFiles)
-            //        {
-            //            Message += Path.GetFileName(file) + ", ";
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    Message += Result["Nothing"][0];
-            //}
             MessageBox.Show(Message, "Результат синхронизации", MessageBoxButtons.OK);
         }
 
