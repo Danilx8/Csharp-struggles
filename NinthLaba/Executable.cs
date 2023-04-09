@@ -192,6 +192,7 @@ namespace TenthLaba
                             Console.WriteLine("Матрица не сгенерирована");
                         }
                         Console.ReadKey();
+                        Console.Clear();
                         break;
                     case (int)Choices.FIND_TRACE:
                         Console.Clear();
