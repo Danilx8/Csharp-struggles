@@ -20,11 +20,11 @@
             double Result = 0.0;
             for (int ElementIndex = 0; ElementIndex < Matrix.GetSize(); ++ElementIndex)
             {
-                if (Matrix[ElementIndex, ElementIndex] != Matrix[Matrix.GetSize() - ElementIndex,
-                    Matrix.GetSize() - ElementIndex])
+                if (Matrix[ElementIndex, ElementIndex] != Matrix[Matrix.GetSize() - ElementIndex - 1,
+                    Matrix.GetSize() - ElementIndex - 1])
                 {
-                    Result += Matrix[ElementIndex, ElementIndex] + Matrix[Matrix.GetSize() - ElementIndex,
-                        Matrix.GetSize() - ElementIndex];
+                    Result += Matrix[ElementIndex, ElementIndex] + Matrix[Matrix.GetSize() - ElementIndex - 1,
+                        Matrix.GetSize() - ElementIndex - 1];
                 }
                 else
                 {
