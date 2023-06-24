@@ -45,19 +45,27 @@ namespace Seventh_Laba
 
         public BinaryTree<T> Next()
         {
-            if (Left != null)
-            {
-                return Left;
-            } else if (Right != null)
-            {
-                return Right;
-            }
-            else
-            {
-                BinaryTree<T> CurrentElement = this;
-                BinaryTree<T> RightNeighbour = Parent.Right;
-                return DeadEndNext(CurrentElement, RightNeighbour);
-            } 
+            //if (Left != null)
+            //{
+            //    return Left;
+            //} else if (Right != null)
+            //{
+            //    return Right;
+            //}
+            //else
+            //{
+            //    BinaryTree<T> CurrentElement = this;
+            //    BinaryTree<T> RightNeighbour = Parent.Right;
+            //    return DeadEndNext(CurrentElement, RightNeighbour);
+            //}
+
+            if (Left != null) return Left;
+
+            if (Right != null) return Right;
+
+            BinaryTree<T> CurrentElement = this;
+            BinaryTree<T> RightNeighbour = Parent.Right;
+            return DeadEndNext(CurrentElement, RightNeighbour);
         }
 
         private BinaryTree<T> DeadEndNext(BinaryTree<T> CurrentElement, BinaryTree<T> RightNeighbour)

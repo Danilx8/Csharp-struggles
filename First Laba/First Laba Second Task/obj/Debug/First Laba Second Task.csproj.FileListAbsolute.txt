@@ -1,8 +1,0 @@
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\bin\Debug\First Laba Second Task.exe.config
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\bin\Debug\First Laba Second Task.exe
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\bin\Debug\First Laba Second Task.pdb
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\obj\Debug\First Laba Second Task.csproj.AssemblyReference.cache
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\obj\Debug\First Laba Second Task.csproj.SuggestedBindingRedirects.cache
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\obj\Debug\First Laba Second Task.csproj.CoreCompileInputs.cache
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\obj\Debug\First Laba Second Task.exe
-C:\Users\Апгрейд\Documents\программирование\Github\Danilx8\Csharp-struggles\First Laba\First Laba Second Task\obj\Debug\First Laba Second Task.pdb
